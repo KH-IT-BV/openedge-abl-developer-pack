@@ -1,0 +1,19 @@
+name: openedge-datadigger-skills
+version: 0.1.0
+description: AI-tool skill for the OpenEdge DataDigger VS Code extension — browse/query OpenEdge databases via a headless launcher CLI + HTTP backend.
+author:
+  name: KH-IT
+  url: https://github.com/KH-IT-BV
+license: UNLICENSED
+repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
+keywords: [openedge, abl, database, datadigger, ai-tools]
+type: skill
+targets:
+  - copilot
+  - claude
+  - cursor
+  - codex
+includes: auto
+dependencies:
+  apm: []
+  mcp: []

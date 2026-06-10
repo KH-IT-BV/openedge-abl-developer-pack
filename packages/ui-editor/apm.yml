@@ -1,0 +1,20 @@
+name: openedge-ui-editor-skills
+version: 0.1.0
+description: AI-tool skill for the API4UI - UI Designer & Toolbox VS Code extension — design/edit OpenEdge ABL .w UI and scaffold/compile/run ABL via its bundled OpenEdge MCP server.
+author:
+  name: KH-IT
+  url: https://github.com/KH-IT-BV
+license: UNLICENSED
+repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
+keywords: [openedge, abl, ui-designer, craftjs, mcp, ai-tools]
+type: skill
+targets:
+  - copilot
+  - claude
+  - cursor
+  - codex
+includes: auto
+dependencies:
+  apm: []
+  # api4ui bundles its own OpenEdge MCP server (started via openedge-abl-ui.startMcpServer).
+  mcp: []

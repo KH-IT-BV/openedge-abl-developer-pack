@@ -1,0 +1,60 @@
+{
+  "name": "openedge-abl-developer-pack",
+  "displayName": "OpenEdge ABL Developer Pack",
+  "description": "A curated VS Code extension pack for Progress OpenEdge ABL / 4GL developers, with language support, snippets, tooling, and productivity extensions.",
+  "version": "0.1.1",
+  "publisher": "AI4YOU",
+  "license": "UNLICENSED",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KH-IT-BV/openedge-abl-developer-pack"
+  },
+  "bugs": {
+    "url": "https://github.com/KH-IT-BV/openedge-abl-developer-pack/issues"
+  },
+  "categories": [
+    "Extension Packs"
+  ],
+  "keywords": [
+    "openedge",
+    "progress",
+    "abl",
+    "4gl",
+    "progress 4gl",
+    "openedge abl",
+    "developer pack",
+    "extension pack",
+    "ai",
+    "kh-it",
+    "ai4you"
+  ],
+  "extensionPack": [
+    "riversidesoftware.openedge-abl-lsp",
+    "AI4YOU.api4ui",
+    "AI4YOU.openedge-abl-openapi",
+    "AI4YOU.vscode-openedge-pasoe",
+    "AI4YOU.vscode-openedge-datadigger",
+    "AI4YOU.vscode-openedge-data-administration",
+    "AI4YOU.vscode-openedge-hck",
+    "progress-software.progress-openedge-mcp-connector-abl",
+    "balticamadeus.pro-peek",
+    "wayfare.ablunitrunner",
+    "usernamehw.errorlens"
+  ],
+  "scripts": {
+    "build-vsix": "npx @vscode/vsce package --allow-missing-repository",
+    "do-deploy": "npm run do-vscode-deploy && npm run do-windsurf-deploy",
+    "do-deploy:pre-release": "npm run do-vscode-deploy:pre-release && npm run do-windsurf-deploy:pre-release",
+    "do-vscode-deploy": "npx @vscode/vsce publish --allow-missing-repository",
+    "do-vscode-deploy:pre-release": "npx @vscode/vsce publish --pre-release --allow-missing-repository",
+    "do-windsurf-deploy": "npx ovsx publish",
+    "do-windsurf-deploy:pre-release": "npx ovsx publish --pre-release",
+    "version:patch": "npm version patch --force",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major"
+  }
+}

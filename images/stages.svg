@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="580" viewBox="0 0 1320 580" font-family="Segoe UI, Arial, sans-serif" role="img" aria-label="From manual coding to AI orchestration - four stages">
+  <defs>
+    <linearGradient id="sbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1322"/>
+      <stop offset="1" stop-color="#0e1d33"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1320" height="580" fill="url(#sbg)"/>
+
+  <!-- title -->
+  <text x="36" y="54" font-size="26" font-weight="800" fill="#ffffff">From manual coding to AI orchestration</text>
+  <text x="36" y="80" font-size="14" fill="#7f9bc0">Where developers are today, and where OpenEdge tooling is heading.</text>
+
+  <!-- ============ STAGE 1 ============ -->
+  <g transform="translate(36,0)">
+    <rect x="0" y="104" width="300" height="440" rx="14" fill="#0f1b2e" stroke="#14b8a6" stroke-width="2"/>
+    <rect x="12" y="116" width="276" height="30" rx="6" fill="#2dd4bf"/>
+    <text x="24" y="137" font-size="14" font-weight="700" fill="#06251f">Stage 1  ·  Today</text>
+
+    <rect x="16" y="160" width="268" height="180" rx="8" fill="#0a1322"/>
+    <!-- editor lines -->
+    <rect x="32" y="178" width="70"  height="8" rx="2" fill="#2b3b55"/>
+    <rect x="32" y="194" width="120" height="8" rx="2" fill="#24344d"/>
+    <rect x="32" y="210" width="100" height="8" rx="2" fill="#24344d"/>
+    <rect x="32" y="226" width="130" height="8" rx="2" fill="#24344d"/>
+    <!-- sidebar agent -->
+    <rect x="170" y="172" width="104" height="150" rx="8" fill="#15233c" stroke="#2dd4bf" stroke-width="1.5"/>
+    <text x="222" y="196" text-anchor="middle" font-size="12" font-weight="700" fill="#cfe9ff">Coding</text>
+    <text x="222" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#cfe9ff">Agent</text>
+    <rect x="190" y="226" width="64" height="24" rx="5" fill="#ea580c"/>
+    <text x="222" y="243" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">Y / N</text>
+    <text x="222" y="262" text-anchor="middle" font-size="13" fill="#64748b">&#8595;</text>
+    <rect x="190" y="266" width="64" height="24" rx="5" fill="#9333ea"/>
+    <text x="222" y="283" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">YOLO</text>
+
+    <!-- caption -->
+    <text font-size="12.5" fill="#9fb3c8">
+      <tspan x="20" y="370">Where most developers are today: a</tspan>
+      <tspan x="20" y="389">coding agent in your IDE. You grant</tspan>
+      <tspan x="20" y="408">permissions, and trust grows toward</tspan>
+      <tspan x="20" y="427">"YOLO" mode where the agent widens.</tspan>
+    </text>
+  </g>
+
+  <!-- ============ STAGE 2 ============ -->
+  <g transform="translate(360,0)">
+    <rect x="0" y="104" width="300" height="440" rx="14" fill="#0f1b2e" stroke="#14b8a6" stroke-width="2"/>
+    <rect x="12" y="116" width="276" height="30" rx="6" fill="#2dd4bf"/>
+    <text x="24" y="137" font-size="14" font-weight="700" fill="#06251f">Stage 2</text>
+
+    <rect x="16" y="160" width="268" height="180" rx="8" fill="#0a1322"/>
+    <!-- wide agent -->
+    <rect x="24" y="168" width="252" height="74" rx="8" fill="#15233c"/>
+    <text x="40" y="190" font-size="13" font-weight="700" fill="#cfe9ff">Coding Agent</text>
+    <rect x="200" y="173" width="58" height="22" rx="5" fill="#9333ea"/>
+    <text x="229" y="188" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">YOLO</text>
+    <rect x="40" y="208" width="120" height="7" rx="2" fill="#22c55e"/>
+    <rect x="40" y="221" width="90"  height="7" rx="2" fill="#ef4444"/>
+    <!-- terminal -->
+    <rect x="24" y="252" width="252" height="70" rx="8" fill="#050d18"/>
+    <text x="40" y="276" font-size="12" font-family="Consolas, monospace" fill="#34d399">$ agent run_task</text>
+    <text x="40" y="298" font-size="12" font-weight="700" fill="#38bdf8">Claude</text>
+    <rect x="40" y="305" width="180" height="6" rx="2" fill="#1f3350"/>
+
+    <text font-size="12.5" fill="#9fb3c8">
+      <tspan x="20" y="370">The agent widens to fill the screen</tspan>
+      <tspan x="20" y="389">&#8212; code becomes just diffs. Then a</tspan>
+      <tspan x="20" y="408">single CLI agent runs the task, with</tspan>
+      <tspan x="20" y="427">diffs you may barely read.</tspan>
+    </text>
+  </g>
+
+  <!-- ============ STAGE 3 ============ -->
+  <g transform="translate(684,0)">
+    <rect x="0" y="104" width="300" height="440" rx="14" fill="#0f1b2e" stroke="#14b8a6" stroke-width="2"/>
+    <rect x="12" y="116" width="276" height="30" rx="6" fill="#2dd4bf"/>
+    <text x="24" y="137" font-size="14" font-weight="700" fill="#06251f">Stage 3</text>
+
+    <rect x="16" y="160" width="268" height="180" rx="8" fill="#0a1322"/>
+    <!-- 3x3 grid of agents (yellow) -->
+    <g fill="#15233c" stroke="#facc15" stroke-width="1.2">
+      <rect x="22"  y="172" width="78" height="44" rx="5"/>
+      <rect x="112" y="172" width="78" height="44" rx="5"/>
+      <rect x="202" y="172" width="78" height="44" rx="5"/>
+      <rect x="22"  y="226" width="78" height="44" rx="5"/>
+      <rect x="112" y="226" width="78" height="44" rx="5"/>
+      <rect x="202" y="226" width="78" height="44" rx="5"/>
+      <rect x="22"  y="280" width="78" height="44" rx="5"/>
+      <rect x="112" y="280" width="78" height="44" rx="5"/>
+      <rect x="202" y="280" width="78" height="44" rx="5"/>
+    </g>
+    <g font-size="10" font-weight="700" fill="#facc15" text-anchor="middle">
+      <text x="61"  y="198">Claude</text>
+      <text x="151" y="198">GPT</text>
+      <text x="241" y="198">Gemini</text>
+      <text x="61"  y="252">Humans</text>
+      <text x="151" y="252">Claude</text>
+      <text x="241" y="252">GPT</text>
+      <text x="61"  y="306">Gemini</text>
+      <text x="151" y="306">Humans</text>
+      <text x="241" y="306">Claude</text>
+    </g>
+
+    <text font-size="12.5" fill="#9fb3c8">
+      <tspan x="20" y="370">You run agents in parallel: 3-5, then</tspan>
+      <tspan x="20" y="389">10+. Hand-managing them all starts</tspan>
+      <tspan x="20" y="408">to push past the limits of what one</tspan>
+      <tspan x="20" y="427">person can track.</tspan>
+    </text>
+  </g>
+
+  <!-- ============ STAGE 4 ============ -->
+  <g transform="translate(1008,0)">
+    <rect x="0" y="104" width="300" height="440" rx="14" fill="#0f1b2e" stroke="#a855f7" stroke-width="2.5"/>
+    <rect x="12" y="116" width="276" height="30" rx="6" fill="#a855f7"/>
+    <text x="24" y="137" font-size="14" font-weight="700" fill="#1f0733">Stage 4  ·  Our target</text>
+
+    <rect x="16" y="160" width="268" height="180" rx="8" fill="#0a1322"/>
+    <!-- orchestrator bar -->
+    <rect x="22" y="168" width="258" height="30" rx="6" fill="#9333ea"/>
+    <text x="151" y="188" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Orchestrator</text>
+    <!-- 4x3 grid of managed agents -->
+    <g fill="#15233c" stroke="#3b82f6" stroke-width="1">
+      <rect x="24"  y="212" width="56" height="30" rx="4"/>
+      <rect x="90"  y="212" width="56" height="30" rx="4"/>
+      <rect x="156" y="212" width="56" height="30" rx="4"/>
+      <rect x="222" y="212" width="56" height="30" rx="4"/>
+      <rect x="24"  y="250" width="56" height="30" rx="4"/>
+      <rect x="90"  y="250" width="56" height="30" rx="4"/>
+      <rect x="156" y="250" width="56" height="30" rx="4"/>
+      <rect x="222" y="250" width="56" height="30" rx="4"/>
+      <rect x="24"  y="288" width="56" height="30" rx="4"/>
+      <rect x="90"  y="288" width="56" height="30" rx="4"/>
+      <rect x="156" y="288" width="56" height="30" rx="4"/>
+      <rect x="222" y="288" width="56" height="30" rx="4"/>
+    </g>
+    <g font-size="8" fill="#93c5fd" text-anchor="middle">
+      <text x="52"  y="231">Claude</text><text x="118" y="231">GPT</text><text x="184" y="231">Gemini</text><text x="250" y="231">Humans</text>
+      <text x="52"  y="269">Claude</text><text x="118" y="269">GPT</text><text x="184" y="269">Gemini</text><text x="250" y="269">Humans</text>
+      <text x="52"  y="307">Claude</text><text x="118" y="307">GPT</text><text x="184" y="307">Gemini</text><text x="250" y="307">Humans</text>
+    </g>
+
+    <text font-size="12.5" fill="#c9b6ef">
+      <tspan x="20" y="370">Our target: an orchestrator where</tspan>
+      <tspan x="20" y="389">humans and AI collaborate on</tspan>
+      <tspan x="20" y="408">described features &#8212; managing your</tspan>
+      <tspan x="20" y="427">10+ agents, not the code.</tspan>
+    </text>
+  </g>
+</svg>
