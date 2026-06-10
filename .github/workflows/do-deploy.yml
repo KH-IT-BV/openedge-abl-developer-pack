@@ -1,0 +1,81 @@
+name: Deploy Extension
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'release/**'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version
+        run: npm version patch --force
+
+      - name: Build VSIX artifact
+        run: npm run build-vsix
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openedge-abl-developer-pack-vsix
+          path: '*.vsix'
+          if-no-files-found: error
+
+      - name: Deploy extension
+        if: startsWith(github.ref, 'refs/heads/release/')
+        shell: bash
+        run: |
+          for i in 1 2 3; do
+            npm run do-deploy && exit 0
+            echo "Deploy attempt $i failed, retrying..."
+            sleep $((i * 20 * (RANDOM % 7 + 2)))
+          done
+          echo "All deploy attempts failed"
+          exit 1
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+
+      - name: Deploy pre-release extension
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          for i in 1 2 3; do
+            npm run do-deploy:pre-release && exit 0
+            echo "Deploy attempt $i failed, retrying..."
+            sleep $((i * 20 * (RANDOM % 7 + 2)))
+          done
+          echo "All deploy attempts failed"
+          exit 1
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+
+      - name: Push version bump and tags
+        if: ${{ !cancelled() }}
+        run: |
+          git pull --rebase --autostash origin ${{ github.ref_name }}
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin --tags

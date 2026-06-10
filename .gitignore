@@ -3,7 +3,6 @@ apm_modules/
 build/
 .claude/
 .claude-plugin/
-.github/
 .cursor/
 .codex/
 
