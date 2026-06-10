@@ -44,8 +44,8 @@ non-empty `reason` before it will run.
 ## Connections
 
 Databases come from the shared **`openedge.abl`** configuration (managed by the
-**OpenEdge Config Management** extension). Configure connections once via
-**Settings → OpenEdge ABL → Db Connections**.
+**[OpenEdge Config Management](config-management.md)** extension). Configure
+connections once via **Settings → OpenEdge ABL → Db Connections**.
 
 ---
 

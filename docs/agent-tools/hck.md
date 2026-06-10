@@ -60,6 +60,6 @@ These mutate server state. Each **requires** `confirm: true` and a non-empty
 ## Connections
 
 Databases come from the shared **`openedge.abl`** configuration (managed by the
-**OpenEdge Config Management** extension), resolved from `openedge-project.json`.
+**[OpenEdge Config Management](config-management.md)** extension), resolved from `openedge-project.json`.
 When no project config is found, the backend starts but exposes no database
 connections.

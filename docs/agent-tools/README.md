@@ -17,9 +17,10 @@ Two delivery mechanisms are used across the pack:
 
 | Extension | Tools doc | Status |
 |---|---|---|
+| [OpenEdge Config Management](config-management.md) | [config-management.md](config-management.md) | Documented/Untested |
 | [OpenEdge DataDigger](datadigger.md) | [datadigger.md](datadigger.md) | Documented/Untested |
-| OpenEdge ABL – OpenAPI | _planned_ | Pending |
-| OpenEdge ABL – PASOE | _planned_ | Pending |
+| [OpenEdge ABL – OpenAPI](openapi.md) | [openapi.md](openapi.md) | Documented/Untested |
+| [OpenEdge ABL – PASOE](pasoe.md) | [pasoe.md](pasoe.md) | Documented/Untested |
 | [OpenEdge HCK – Health Check Kit](hck.md) | [hck.md](hck.md) | Documented/Untested |
 | API4UI – UI Designer & Toolbox | _planned_ | Pending |
 | [OpenEdge Data Administration](dictionary.md) | [dictionary.md](dictionary.md) | Documented/Untested |

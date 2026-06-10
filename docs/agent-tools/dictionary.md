@@ -85,6 +85,37 @@ These mutate the target database. Each **requires** a `confirmation` object.
 | Load DF | `#loadDf` | Load a `.df` schema definition into a database. | `database`, `dfFilePath`, `confirmation` | `LOAD INTO <database>` |
 | Load Data | `#loadData` | Load table data from files into a database. | `database`, `dataDirectory`, `confirmation` | `LOAD INTO <database>` |
 
+## Database lifecycle & ops tools
+
+These operate on the database/AdminServer level via `dbPath` (absolute path to
+the `.db` file) rather than a logical connection. Start/backup operations
+require confirmation (`APPLY TO <target>`); stop/restore/kill are
+**destructive** and require the exact `DELETE FROM <target>` confirmation text.
+
+| Tool | Reference | Description | Required args | Confirmation |
+|---|---|---|---|---|
+| Database Status | `#databaseStatus` | Current status of a database (running or stopped). | `dbPath` | — |
+| Start Database | `#startDatabase` | Start a database broker (single-user mode) via `proserve`. | `dbPath`, `confirmation` | `APPLY TO <dbPath>` |
+| Start Database (Proserve) | `#startDatabaseProserve` | Start a multi-user broker via `proserve`. | `dbPath`, `confirmation` | `APPLY TO <dbPath>` (optional `port`, `maxUsers`, `minPort`, `maxPort`) |
+| Stop Database | `#stopDatabase` | Stop a running broker via `proshut`. **Destructive.** | `dbPath`, `confirmation` | `DELETE FROM <dbPath>` |
+| Backup Database | `#backupDatabase` | Back up a database via `probkup` (offline or `online`). | `dbPath`, `backupPath`, `confirmation` | `APPLY TO <dbPath>` |
+| Restore Database | `#restoreDatabase` | Restore from a backup via `prorest`. **Destructive.** | `dbPath`, `backupPath`, `confirmation` | `DELETE FROM <dbPath>` |
+| Validate Database | `#validateDatabase` | Validate structure and indexes via `proutil`. | `dbPath` | — (optional `indexes`) |
+| AdminServer Status | `#adminserverStatus` | Current status of the OpenEdge AdminServer. | — | — |
+| AdminServer Start | `#adminserverStart` | Start the AdminServer service. | `confirmation` | `APPLY TO AdminServer` |
+| AdminServer Stop | `#adminserverStop` | Stop the AdminServer service. **Destructive.** | `confirmation` | `DELETE FROM AdminServer` |
+
+## Environment & process tools
+
+Read-only system inspection, plus one destructive process action.
+
+| Tool | Reference | Description | Required args | Confirmation |
+|---|---|---|---|---|
+| OpenEdge Environment Info | `#openedgeEnvironmentInfo` | DLC path, version, PROPATH, OPSYS, etc. | — | — |
+| System Resources | `#systemResources` | CPU, memory, and disk utilization relevant to OpenEdge. | — | — |
+| Progress Processes | `#progressProcesses` | List all running OpenEdge/Progress processes. | — | — |
+| Kill Progress Process | `#killProgressProcess` | Kill a Progress process by PID. **Destructive.** | `pid`, `confirmation` | `DELETE FROM <pid>` (optional `signal`: `TERM` \| `KILL`) |
+
 ## Argument notes
 
 - **`database`** — logical database name; must match a configured connection.
@@ -103,5 +134,5 @@ These mutate the target database. Each **requires** a `confirmation` object.
 ## Connections
 
 Databases come from the shared **`openedge.abl`** configuration (managed by the
-**OpenEdge Config Management** extension). Configure connections once via
-**Settings → OpenEdge ABL → Db Connections**.
+**[OpenEdge Config Management](config-management.md)** extension). Configure
+connections once via **Settings → OpenEdge ABL → Db Connections**.

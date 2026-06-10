@@ -15,6 +15,7 @@ One installable package per plugin lives under `packages/`:
 | `openedge-hck-skills` | OpenEdge HCK – Health Check Kit |
 | `openedge-pasoe-skills` | OpenEdge ABL – PASOE |
 | `openedge-database-selector-skills` | Database Selector (shared) |
+| `openedge-config-management-skills` | OpenEdge Config Management (shared config owner) |
 
 Each package uses the **plugin layout** (discoverable, non-hidden paths) and contains:
 
@@ -50,8 +51,21 @@ apm marketplace add KH-IT-BV/openedge-abl-developer-pack
 apm install openedge-openapi-skills
 
 # …or install one plugin package directly by subpath + tag:
-apm install KH-IT-BV/openedge-abl-developer-pack/packages/openapi#v0.1.0
+apm install KH-IT-BV/openedge-abl-developer-pack/packages/openapi#v0.2.0
 ```
+
+## Source of truth
+
+**This repo (`packages/*`) is the single source of truth for the skill packages.**
+The `KH-IT-BV/skills` repo must consume them via the APM marketplace
+(`apm marketplace add KH-IT-BV/openedge-abl-developer-pack`) instead of keeping
+its own copies — any duplicated `*-ai-tools` skills there should be treated as
+generated/installed artifacts, not edited directly.
+
+Keeping docs in sync: `npm run check-agent-tools-sync` compares each
+`docs/agent-tools/*.md` page against the `languageModelTools` declared in the
+sibling extension repo's `package.json` and fails on drift. Run it before
+tagging a release.
 
 ## Publish a new version (maintainers)
 
@@ -87,6 +101,6 @@ Build the root marketplace index and tag the release:
 
 ```powershell
 apm pack
-git tag v0.1.0
+git tag v0.2.0
 git push --tags
 ```

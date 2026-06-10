@@ -1,5 +1,5 @@
 name: openedge-openapi-skills
-version: 0.1.0
+version: 0.2.0
 description: AI-tool skill for the OpenEdge ABL - OpenAPI VS Code extension — generate ABL client/server code from OpenAPI specs via a standalone stdio MCP server.
 author:
   name: KH-IT

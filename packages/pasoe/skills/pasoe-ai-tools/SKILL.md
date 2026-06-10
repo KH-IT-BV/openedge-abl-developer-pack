@@ -2,9 +2,10 @@
 name: pasoe-ai-tools
 description: >-
   AI-tool surface for the OpenEdge ABL - PASOE VS Code extension (package `vscode-openedge-pasoe`,
-  publisher AI4YOU): manage PASOE servers from VS Code. Command IDs, server-config schema, OAuth
-  callback, and the current (UI-coupled) reach model — PASOE management logic is not yet headless.
-  Use when an agent must work with PASOE instances or plan headless extraction.
+  publisher AI4YOU): manage PASOE servers from VS Code. Primary agent access is the
+  `openedge-pasoe` MCP server / language-model tools (status, list/create instance config,
+  MS-Agent start/stop, PAAR deployment via OE Manager); plus command IDs, the server-config
+  schema, and the OAuth callback. Use when an agent must work with PASOE instances.
 ---
 
 # OpenEdge ABL - PASOE — AI tools
@@ -13,13 +14,22 @@ Extension: package `vscode-openedge-pasoe`, publisher `AI4YOU`. Configures/manag
 servers via a Flutter webview. Unlike datadigger/dictionary/hck it has **no Node+OE backend / ABL
 socket** — management runs from the extension over HTTP(S) to the PASOE server.
 
-## AI entry points (current)
+## AI entry points (in priority order)
 
-1. **VS Code commands** (require a running extension):
+1. **MCP server / language-model tools** — provider `pasoeProvider` (`pasoe_mcp_server/`), tools
+   also referenceable in chat (e.g. `#pasoe_status`). All target a configured server
+   (`serverName`, defaults to the first entry):
+   - Read-only: `pasoe_status` (running/unreachable/unauthorized), `pasoe_list_instances`
+     (optionally with live status; passwords never included).
+   - State-changing: `pasoe_create_instance` (settings + SecretStorage entry — config only, no
+     OS-level runtime), `pasoe_start_instance` / `pasoe_stop_instance` (OE Manager MS-Agent
+     lifecycle per `appName`/`agentId`), `pasoe_deploy_application` (deploy a `.paar` to a web
+     app via `rest` | `soap` | `web` transport).
+2. **VS Code commands** (require a running extension):
    - `vscode-openedge.paose.launchOpenEdgePasoe` — open the PASOE configuration UI.
    - `vscode-openedge-pasoe.handleAuth` — OAuth callback handler (`vscode://` URI scheme).
-2. **Direct PASOE HTTP(S)** — the management calls target the configured PASOE server
-   (`host`/`port`/`transport`). An agent with valid credentials could call PASOE's OE Manager /
+3. **Direct PASOE HTTP(S)** — the management calls target the configured PASOE server
+   (`host`/`port`/`transport`). An agent with valid credentials can call PASOE's OE Manager /
    admin endpoints directly, independent of this extension.
 
 ## Server config schema (`openedge-pasoe.servers[]`)
@@ -32,12 +42,14 @@ Each entry: `name`, `host`, `port`, `transport` (`http`|`https`), `authType` (`b
 
 ## How an agent should drive it
 
-- Today: human-in-VS-Code via the command, or call the target PASOE server's admin API directly
-  with credentials the agent already holds.
-- The extension's own management logic is **UI-coupled** — no standalone CLI/MCP yet.
+1. `pasoe_list_instances` (with `includeStatus`) to see configured servers.
+2. `pasoe_status` before/after any change. 3. Use `pasoe_start_instance` / `pasoe_stop_instance`
+   / `pasoe_deploy_application` for lifecycle and deployment — confirm the target server first.
+- Fallback: call the PASOE server's OE Manager API directly with credentials the agent holds.
 
 ## Limitations / readiness
 
-- No headless CLI or MCP server (planned). Highest-value extraction: PASOE lifecycle
-  (status/start/stop) into a `vscode`-free module the agent can call.
-- Credential access without VS Code SecretStorage is an open question.
+- `pasoe_create_instance` writes configuration only — it does **not** create an OS-level PASOE
+  runtime or start a process.
+- Passwords live in VS Code SecretStorage (via `secretKey`); outside VS Code, credentials must be
+  provided explicitly. Treat start/stop/deploy as state-changing — confirm the target.

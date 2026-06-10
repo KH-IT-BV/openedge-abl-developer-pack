@@ -8,11 +8,12 @@ AI-tool skill for the **OpenEdge ABL - PASOE** VS Code extension
 ```bash
 apm install openedge-pasoe-skills
 # or directly:
-apm install KH-IT-BV/openedge-abl-developer-pack/packages/pasoe#v0.1.0
+apm install KH-IT-BV/openedge-abl-developer-pack/packages/pasoe#v0.2.0
 ```
 
 ## What the agent gets
 
-Command IDs, the `openedge-pasoe.servers[]` config schema, and the OAuth callback. Note: PASOE
-management is **UI-coupled** today — no headless CLI/MCP yet (an agent with credentials can call
-the PASOE admin API directly). See `skills/pasoe-ai-tools/SKILL.md`.
+The **PASOE MCP server / language-model tools** (`pasoe_status`, `pasoe_list_instances`,
+`pasoe_create_instance`, `pasoe_start_instance`, `pasoe_stop_instance`,
+`pasoe_deploy_application` — OE Manager-based), plus command IDs, the `openedge-pasoe.servers[]`
+config schema, and the OAuth callback. See `skills/pasoe-ai-tools/SKILL.md`.

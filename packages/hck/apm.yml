@@ -1,12 +1,12 @@
 name: openedge-hck-skills
-version: 0.1.0
-description: AI-tool skill for the OpenEdge HCK - Health Check Kit VS Code extension — run health checks/read diagnostics via a headless launcher CLI + HTTP backend.
+version: 0.2.0
+description: AI-tool skill for the OpenEdge HCK - Health Check Kit VS Code extension — run health checks/read diagnostics via the `openedge-hck` MCP server (18 read tools + 2 confirmed actions), with a headless launcher CLI + HTTP backend as fallback.
 author:
   name: KH-IT
   url: https://github.com/KH-IT-BV
 license: UNLICENSED
 repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
-keywords: [openedge, abl, health-check, diagnostics, monitoring, ai-tools]
+keywords: [openedge, abl, health-check, diagnostics, monitoring, mcp, ai-tools]
 type: skill
 targets:
   - copilot

@@ -2,7 +2,7 @@
   "name": "openedge-abl-developer-pack",
   "displayName": "OpenEdge ABL Developer Pack",
   "description": "A curated VS Code extension pack for Progress OpenEdge ABL / 4GL developers, with language support, snippets, tooling, and productivity extensions.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "AI4YOU",
   "license": "UNLICENSED",
   "icon": "images/icon.png",
@@ -34,6 +34,7 @@
   ],
   "extensionPack": [
     "riversidesoftware.openedge-abl-lsp",
+    "AI4YOU.openedge-config-management",
     "AI4YOU.api4ui",
     "AI4YOU.openedge-abl-openapi",
     "AI4YOU.vscode-openedge-pasoe",
@@ -47,6 +48,7 @@
   ],
   "scripts": {
     "build-vsix": "npx @vscode/vsce package --allow-missing-repository",
+    "check-agent-tools-sync": "node scripts/check-agent-tools-sync.js",
     "do-deploy": "npm run do-vscode-deploy && npm run do-windsurf-deploy",
     "do-deploy:pre-release": "npm run do-vscode-deploy:pre-release && npm run do-windsurf-deploy:pre-release",
     "do-vscode-deploy": "npx @vscode/vsce publish --allow-missing-repository",

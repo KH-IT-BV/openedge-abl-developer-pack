@@ -31,11 +31,12 @@ forks yet. That's where **phase 1** starts: bringing it into this environment.
 | Capability | Extension | Available on |
 |---|---|---|
 | **Database administration** | OpenEdge Data Administration | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
-| **Database querying & browsing** | OpenEdge DataDigger | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
-| **PASOE management** | OpenEdge ABL – PASOE | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
 | **UI design** | API4UI – UI Designer & Toolbox | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) |
+| **PASOE management** | OpenEdge ABL – PASOE | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
+| **API code generation** | OpenEdge ABL – OpenAPI | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) |
+| **Database querying & browsing** | OpenEdge DataDigger | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
 | **Performance checks** | OpenEdge HCK – Health Check Kit | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) |
-| **API code generation** | OpenEdge ABL – OpenAPI | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) |
+| **Shared configuration** | OpenEdge Config Management | ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white) ![Open VSX](https://img.shields.io/badge/Open_VSX-A60EE5?logo=eclipseide&logoColor=white) ![MCP](https://img.shields.io/badge/MCP-000000?logo=anthropic&logoColor=white) |
 
 
 > MCP badges reflect extensions with documented agent tools others are planned.
@@ -55,7 +56,7 @@ feature delivery** for OpenEdge development.
 
 > **Work in progress:** We are also building installable AI-agent skills for this pack using Microsoft APM. See [AI skills for agents (APM) — work in progress](AI-SKILLS-APM-WIP.md).
 
-> **Agent tools:** For the tools each extension exposes to AI agents, see [Agent Tools](docs/agent-tools/README.md) — starting with [OpenEdge DataDigger](docs/agent-tools/datadigger.md).
+> **Agent tools:** For the tools each extension exposes to AI agents, see [Agent Tools](docs/agent-tools/README.md) — covering [DataDigger](docs/agent-tools/datadigger.md), [Data Administration](docs/agent-tools/dictionary.md), [HCK](docs/agent-tools/hck.md), [PASOE](docs/agent-tools/pasoe.md), [OpenAPI](docs/agent-tools/openapi.md), and [Config Management](docs/agent-tools/config-management.md).
 
 ---
 
@@ -70,6 +71,7 @@ feature delivery** for OpenEdge development.
 ### OpenEdge tooling by AI4YOU
 | Extension | What it does |
 |---|---|
+| [OpenEdge Config Management](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-config-management) | Central owner of shared OpenEdge ABL configuration (database connections, runtime/DLC, project discovery) — plus ABL scaffolding, compile/run, and MCP server lifecycle. The other AI4YOU extensions depend on it. |
 | [API4UI – UI Designer & Toolbox](https://marketplace.visualstudio.com/items?itemName=AI4YOU.api4ui) | Visual drag-and-drop UI designer for OpenEdge ABL. |
 | [OpenEdge ABL – OpenAPI](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-abl-openapi) | Generate and keep ABL clients aligned with OpenAPI specs. |
 | [OpenEdge ABL – PASOE](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-pasoe) | Configure and manage PASOE servers from a graphical interface. |

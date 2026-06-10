@@ -1,12 +1,12 @@
 name: openedge-dictionary-skills
-version: 0.1.0
-description: AI-tool skill for the OpenEdge Data Administration (Dictionary) VS Code extension — inspect/administer OpenEdge schema via a headless launcher CLI + HTTP backend.
+version: 0.2.0
+description: AI-tool skill for the OpenEdge Data Administration (Dictionary) VS Code extension — inspect/administer OpenEdge schema via the `openedge-dictionary` MCP server (~50 tools), with a headless launcher CLI + HTTP backend as fallback.
 author:
   name: KH-IT
   url: https://github.com/KH-IT-BV
 license: UNLICENSED
 repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
-keywords: [openedge, abl, schema, dictionary, dump-load, ai-tools]
+keywords: [openedge, abl, schema, dictionary, dump-load, mcp, ai-tools]
 type: skill
 targets:
   - copilot

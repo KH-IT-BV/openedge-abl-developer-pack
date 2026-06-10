@@ -1,12 +1,12 @@
 name: openedge-pasoe-skills
-version: 0.1.0
-description: AI-tool skill for the OpenEdge ABL - PASOE VS Code extension — manage PASOE/OEPAS servers (commands, server config, OAuth). Management logic is UI-coupled; no headless CLI/MCP yet.
+version: 0.2.0
+description: AI-tool skill for the OpenEdge ABL - PASOE VS Code extension — manage PASOE/OEPAS servers via the PASOE MCP server (status, instance config, MS-Agent lifecycle, PAAR deployment), plus commands, server config, and OAuth.
 author:
   name: KH-IT
   url: https://github.com/KH-IT-BV
 license: UNLICENSED
 repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
-keywords: [openedge, abl, pasoe, oepas, appserver, ai-tools]
+keywords: [openedge, abl, pasoe, oepas, appserver, mcp, ai-tools]
 type: skill
 targets:
   - copilot

@@ -3,7 +3,7 @@ description: Guidance for using the OpenEdge Data Administration AI skill
 applyTo: "**/*"
 ---
 
-When working on OpenEdge schema, dictionary, dump/load, or database administration tasks, prefer the `dictionary-ai-tools` skill for the launcher CLI, backend HTTP API, command IDs, ports, and settings.
+When working on OpenEdge schema, dictionary, dump/load, or database administration tasks, prefer the `dictionary-ai-tools` skill for the `openedge-dictionary` MCP tools, launcher CLI, backend HTTP API, command IDs, ports, and settings.
 
 Do not invent schema endpoints, command IDs, launcher arguments, report names, or connection formats. If unsure, inspect the skill first.
 

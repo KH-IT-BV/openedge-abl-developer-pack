@@ -1,5 +1,5 @@
 name: openedge-ui-editor-skills
-version: 0.1.0
+version: 0.2.0
 description: AI-tool skill for the API4UI - UI Designer & Toolbox VS Code extension — design/edit OpenEdge ABL .w UI and scaffold/compile/run ABL via its bundled OpenEdge MCP server.
 author:
   name: KH-IT
