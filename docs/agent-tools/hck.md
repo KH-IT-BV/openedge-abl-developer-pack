@@ -13,36 +13,36 @@ confirmation gate—act on findings. In chat, reference a tool with
 These never modify data and require no confirmation. All take `db` (required)
 and an optional `conn` connection string.
 
-| Tool                                  | Reference                     | Description                                                       | Required args               | Optional args | Test D1            |
+| Tool                                  | Reference                     | Description                                                       | Required args               | Optional args | Status            |
 | ------------------------------------- | ----------------------------- | ----------------------------------------------------------------- | --------------------------- | ------------- | ------------------ |
-| Get Database Connections              | `#getConnections`             | Lists active database connections and their connection IDs.       | `db`                        | `conn`        | NOT FUNCTIONAL YET |
-| Get Database File List                | `#getFileList`                | Lists database files and their storage areas.                     | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Activity Summary                  | `#getActivitySummary`         | High-level activity counters: reads, writes, locks, commits, I/O. | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Buffer Activity                   | `#getBufferActivity`          | Per-buffer-pool reads, writes, hits, and waits.                   | `db`                        | `conn`        | NOT FUNCTIONAL YET |
-| Get Lock Activity                     | `#getLockActivity`            | Lock requests, grants, waits, and timeouts.                       | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Page Writer Activity              | `#getPwActivity`              | Page Writer pages written, scan cycles, flushing metrics.         | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Server Activity                   | `#getServerActivity`          | Per-server messages, bytes, and queue lengths.                    | `db`                        | `conn`        | FUNCTIONAL         |
-| Get User I/O                          | `#getUserIo`                  | Per-user reads, writes, and record-access counts.                 | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Storage Area Status               | `#getAreaStatus`              | Size, free space, and high-water marks per storage area.          | `db`                        | `conn`        | NOT FUNCTIONAL YET |
-| Get Buffer Status                     | `#getBufferStatus`            | Buffer pool size, used count, and efficiency metrics.             | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Checkpoint Info                   | `#getCheckpoints`             | Checkpoint history: last time, interval, duration.                | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Active Locks                      | `#getLocks`                   | Currently held locks: table, user, type, connection ID.           | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Record Field Details              | `#getRecordInfo`              | Field-level detail for one record.                                | `db`, `fileNumber`, `recid` | `conn`        | FUNCTIONAL         |
-| Get Active Transactions               | `#getTransactions`            | Active transactions: ID, start time, user, state.                 | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Table & Index Statistics          | `#getTableStats`              | Cumulative table/index reads, creates, updates, deletes.          | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Per-User Table & Index Statistics | `#getUserTableStats`          | Table/index stats broken down per user.                           | `db`                        | `conn`        | FUNCTIONAL         |
-| Get Replication Agent Status          | `#getReplicationAgentStatus`  | Replication agent state, queue depth, lag.                        | `db`                        | `conn`        | NOT FUNCTIONAL YET |
-| Get Replication Server Status         | `#getReplicationServerStatus` | Replication server state, connected agents, lag.                  | `db`                        | `conn`        | NOT FUNCTIONAL YET |
+| Get Database Connections              | `#getConnections`             | Lists active database connections and their connection IDs.       | `db`                        | `conn`        | 🚧 In progress |
+| Get Database File List                | `#getFileList`                | Lists database files and their storage areas.                     | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Activity Summary                  | `#getActivitySummary`         | High-level activity counters: reads, writes, locks, commits, I/O. | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Buffer Activity                   | `#getBufferActivity`          | Per-buffer-pool reads, writes, hits, and waits.                   | `db`                        | `conn`        | 🚧 In progress |
+| Get Lock Activity                     | `#getLockActivity`            | Lock requests, grants, waits, and timeouts.                       | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Page Writer Activity              | `#getPwActivity`              | Page Writer pages written, scan cycles, flushing metrics.         | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Server Activity                   | `#getServerActivity`          | Per-server messages, bytes, and queue lengths.                    | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get User I/O                          | `#getUserIo`                  | Per-user reads, writes, and record-access counts.                 | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Storage Area Status               | `#getAreaStatus`              | Size, free space, and high-water marks per storage area.          | `db`                        | `conn`        | 🚧 In progress |
+| Get Buffer Status                     | `#getBufferStatus`            | Buffer pool size, used count, and efficiency metrics.             | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Checkpoint Info                   | `#getCheckpoints`             | Checkpoint history: last time, interval, duration.                | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Active Locks                      | `#getLocks`                   | Currently held locks: table, user, type, connection ID.           | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Record Field Details              | `#getRecordInfo`              | Field-level detail for one record.                                | `db`, `fileNumber`, `recid` | `conn`        | 🟡 Validation 1/2         |
+| Get Active Transactions               | `#getTransactions`            | Active transactions: ID, start time, user, state.                 | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Table & Index Statistics          | `#getTableStats`              | Cumulative table/index reads, creates, updates, deletes.          | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Per-User Table & Index Statistics | `#getUserTableStats`          | Table/index stats broken down per user.                           | `db`                        | `conn`        | 🟡 Validation 1/2         |
+| Get Replication Agent Status          | `#getReplicationAgentStatus`  | Replication agent state, queue depth, lag.                        | `db`                        | `conn`        | 🚧 In progress |
+| Get Replication Server Status         | `#getReplicationServerStatus` | Replication server state, connected agents, lag.                  | `db`                        | `conn`        | 🚧 In progress |
 
 ## Action tools (require confirmation)
 
 These mutate server state. Each **requires** `confirm: true` and a non-empty
 `reason` before it will run.
 
-| Tool                     | Reference         | Description                                                  | Required args                             | Optional args                             | Test D1            |
+| Tool                     | Reference         | Description                                                  | Required args                             | Optional args                             | Status            |
 | ------------------------ | ----------------- | ------------------------------------------------------------ | ----------------------------------------- | ----------------------------------------- | ------------------ |
-| Disconnect Database User | `#disconnectUser` | Disconnects a user session by `connectionId`.                | `db`, `connectionId`, `confirm`, `reason` | `conn`                                    | NOT FUNCTIONAL YET |
-| Clear Database Lock      | `#clearLock`      | Clears one or more locks; identify by lock/connection/table. | `db`, `confirm`, `reason`                 | `conn`, `lockId`, `connectionId`, `table` | NOT FUNCTIONAL YET |
+| Disconnect Database User | `#disconnectUser` | Disconnects a user session by `connectionId`.                | `db`, `connectionId`, `confirm`, `reason` | `conn`                                    | 🚧 In progress |
+| Clear Database Lock      | `#clearLock`      | Clears one or more locks; identify by lock/connection/table. | `db`, `confirm`, `reason`                 | `conn`, `lockId`, `connectionId`, `table` | 🚧 In progress |
 
 ## Argument notes
 

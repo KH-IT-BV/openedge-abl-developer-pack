@@ -27,3 +27,15 @@ Two delivery mechanisms are used across the pack:
 
 > Each extension page is kept in sync with its `package.json` tool definitions.
 > When tools are added or changed, update the corresponding page here.
+
+## Status legend
+
+Each tool table has a **Status** column tracking validation progress. Every tool
+goes through **2 validation rounds**:
+
+| Status              | Meaning                                                  |
+| ------------------- | -------------------------------------------------------- |
+| 📋 To do            | Not yet tested.                                          |
+| 🚧 In progress      | Under test; not working yet (0/2 validations passed).    |
+| 🟡 Validation 1/2   | Passed the first validation round; second still pending. |
+| ✅ Validation 2/2   | Passed both validation rounds; fully working.            |
