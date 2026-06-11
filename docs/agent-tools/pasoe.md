@@ -10,22 +10,22 @@ deployment. In chat, reference a tool with `#<reference>`
 
 ## Read-only tools
 
-| Tool | Reference | Description | Required args | Optional args |
-|---|---|---|---|---|
-| PASOE Status | `#pasoe_status` | Checks a configured PASOE server through OE Manager — running, unreachable, unauthorized, or unknown. | — | `serverName` (defaults to first configured server) |
-| List PASOE Instances | `#pasoe_list_instances` | Lists all configured PASOE servers. Passwords are never included. | — | `includeStatus` (also check live status) |
+| Tool                 | Reference               | Description                                                                                           | Required args | Optional args                                      | Status            |
+| -------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------- | ----------------- |
+| PASOE Status         | `#pasoe_status`         | Checks a configured PASOE server through OE Manager — running, unreachable, unauthorized, or unknown. | —             | `serverName` (defaults to first configured server) | 🟡 Validation 1/2 |
+| List PASOE Instances | `#pasoe_list_instances` | Lists all configured PASOE servers. Passwords are never included.                                     | —             | `includeStatus` (also check live status)           | 🟡 Validation 1/2 |
 
 ## State-changing tools
 
 These create configuration or change server state. Confirm the target server
 before invoking them.
 
-| Tool | Reference | Description | Required args | Optional args |
-|---|---|---|---|---|
-| Create Instance Configuration | `#pasoe_create_instance` | Creates/updates a PASOE server entry in settings + SecretStorage. Config only — does **not** create an OS-level PASOE runtime. | `name`, `host` | `port` (default 8810), `transport` (`http` \| `https`), `authType` (`basic` \| `oauth`), `username`, `password`, `sharePlaintextCredentials`, `overwrite` |
-| Start MS-Agent | `#pasoe_start_instance` | Starts an OE Manager MS-Agent for an application (`addAgent` endpoint). | `appName` | `serverName`, `timeoutMs` |
-| Stop MS-Agent | `#pasoe_stop_instance` | Stops an OE Manager MS-Agent (agents DELETE endpoint). | `appName`, `agentId` | `serverName`, `waitToFinish`, `waitAfterStop`, `timeoutMs` |
-| Deploy Application | `#pasoe_deploy_application` | Deploys a `.paar` archive to a web app via OE Manager REST/SOAP/WEB transport. | `appName`, `webAppName`, `transport` (`rest` \| `soap` \| `web`), `archivePath` | `serverName`, `timeoutMs` |
+| Tool                          | Reference                   | Description                                                                                                                    | Required args                                                                   | Optional args                                                                                                                                             | Status            |
+| ----------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| Create Instance Configuration | `#pasoe_create_instance`    | Creates/updates a PASOE server entry in settings + SecretStorage. Config only — does **not** create an OS-level PASOE runtime. | `name`, `host`                                                                  | `port` (default 8810), `transport` (`http` \| `https`), `authType` (`basic` \| `oauth`), `username`, `password`, `sharePlaintextCredentials`, `overwrite` | 🟡 Validation 1/2 |
+| Start MS-Agent                | `#pasoe_start_instance`     | Starts an OE Manager MS-Agent for an application (`addAgent` endpoint).                                                        | `appName`                                                                       | `serverName`, `timeoutMs`                                                                                                                                 | 🚧 In progress    |
+| Stop MS-Agent                 | `#pasoe_stop_instance`      | Stops an OE Manager MS-Agent (agents DELETE endpoint).                                                                         | `appName`, `agentId`                                                            | `serverName`, `waitToFinish`, `waitAfterStop`, `timeoutMs`                                                                                                | 🚧 In progress    |
+| Deploy Application            | `#pasoe_deploy_application` | Deploys a `.paar` archive to a web app via OE Manager REST/SOAP/WEB transport.                                                 | `appName`, `webAppName`, `transport` (`rest` \| `soap` \| `web`), `archivePath` | `serverName`, `timeoutMs`                                                                                                                                 | 🚧 In progress    |
 
 ## Argument notes
 
