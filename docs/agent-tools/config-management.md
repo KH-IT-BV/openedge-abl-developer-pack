@@ -31,6 +31,61 @@ manages the server lifecycle through commands:
 - `openedge-tooling.mcpServerStatus`, `openedge-tooling.showMcpLogs`
 - `openedge-tooling.removeMcpConfigNow` — removes the `mcp.json` entry
 
+### Database tools
+
+| Tool | Reference | Description | Required args | Optional args | Status |
+|---|---|---|---|---|---|
+| Create Database | `#create_database` | Create a new Progress database. | `databaseName`, `databasePath` | `blockSize`, `beforeImagePath`, `afterImagePath` | 🚧 In progress |
+| Start Database | `#start_database` | Start a Progress database. | `databasePath` | `multiUser`, `maxUsers`, `buffers`, `serverPort` | 🚧 In progress |
+| Stop Database | `#stop_database` | Stop a Progress database. | `databasePath` | `immediate` | 🚧 In progress  |
+| Database Status | `#database_status` | Get database status information. | `databasePath` | — | 🚧 In progress  |
+| List Databases | `#list_databases` | List all databases in a directory. | — | `searchDirectory` | 🟡 Validation 1/2 |
+| Backup Database | `#backup_database` | Back up a Progress database. | `databasePath`, `destination`, `type` | `online`, `verify`, `compress` | 🚧 In progress |
+| Restore Database | `#restore_database` | Restore a Progress database from backup. | `databasePath`, `backupPath` | — | 🚧 In progress |
+| Validate Database | `#validate_database` | Validate database integrity. | `databasePath` | — | 🚧 In progress |
+
+### PASOE tools
+
+| Tool | Reference | Description | Required args | Optional args | Status |
+|---|---|---|---|---|---|
+| Create PASOE Instance | `#create_pasoe_instance` | Create a new PASOE instance. | `instanceName`, `instancePath` | `port`, `protocol` (`http` \| `https`) | 🚧 In progress |
+| Start PASOE Instance | `#start_pasoe_instance` | Start a PASOE instance. | `instanceName` | — | 🟡 Validation 1/2 |
+| Stop PASOE Instance | `#stop_pasoe_instance` | Stop a PASOE instance. | `instanceName` | `graceful` | 🟡 Validation 1/2 |
+| List PASOE Instances | `#list_pasoe_instances` | List all PASOE instances. | — | — | 🟡 Validation 1/2 |
+| Deploy Application | `#deploy_application` | Deploy an application to a PASOE instance. | `instanceName`, `applicationPath` | `applicationName` | 🚧 In progress |
+
+### AdminServer tools
+
+| Tool | Reference | Description | Required args | Optional args | Status |
+|---|---|---|---|---|---|
+| Start AdminServer | `#start_adminserver` | Start OpenEdge AdminServer. | — | `port` | 🚧 In progress |
+| Stop AdminServer | `#stop_adminserver` | Stop OpenEdge AdminServer. | — | — | 🚧 In progress |
+| AdminServer Status | `#adminserver_status` | Get AdminServer status. | — | — | 🚧 In progress |
+
+### System tools
+
+| Tool | Reference | Description | Required args | Optional args | Status |
+|---|---|---|---|---|---|
+| OpenEdge Environment Info | `#openedge_environment_info` | Get OpenEdge environment information. | — | — | 🟡 Validation 1/2 |
+| System Resources | `#system_resources` | Get system resource usage. | — | — | 🟡 Validation 1/2 |
+| Progress Processes | `#progress_processes` | Get the list of running Progress processes. | — | — | 🟡 Validation 1/2 |
+| Kill Progress Process | `#kill_progress_process` | Terminate a Progress process. | `pid` | `force` | 🟡 Validation 1/2 |
+
+### Development tools
+
+| Tool | Reference | Description | Required args | Optional args | Status |
+|---|---|---|---|---|---|
+| Compile Progress Code | `#compile_progress_code` | Compile Progress 4GL code. | `sourceFile` | `listingFile`, `rCodeDir`, `minSize` | 🚧 In progress |
+| Run Progress Procedure | `#run_progress_procedure` | Execute a Progress 4GL procedure. | `procedure` | `parameters`, `databasePath` | 🚧 In progress |
+| Test Database Connection | `#test_database_connection` | Test database connectivity. | `databasePath` | `userId` | 🟡 Validation 1/2 |
+
+### Server lifecycle commands
+
+| Area | Commands |
+|---|---|
+| MCP server lifecycle | `openedge-tooling.startMcpServer`, `openedge-tooling.stopMcpServer`, `openedge-tooling.restartMcpServer` |
+| MCP diagnostics | `openedge-tooling.mcpServerStatus`, `openedge-tooling.showMcpLogs`, `openedge-tooling.removeMcpConfigNow` |
+
 ## Command groups (`openedge-tooling.*`)
 
 | Area | Commands |
