@@ -74,15 +74,15 @@ predictable, fully automated feature delivery** for OpenEdge development.
 | [Progress OpenEdge MCP Connector](https://marketplace.visualstudio.com/items?itemName=progress-software.progress-openedge-mcp-connector-abl) | Official Progress MCP connector for ABL — exposes OpenEdge to AI agents. The foundation OEDP's operational tooling layers onto. |
 
 ### Operational tooling layer by AI4YOU
-| Extension | What it does |
-|---|---|
-| [OpenEdge Config Management](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-config-management) | Central owner of shared OpenEdge ABL configuration (database connections, runtime/DLC, project discovery) — plus ABL scaffolding, compile/run, and MCP server lifecycle. The other AI4YOU extensions depend on it. |
-| [API4UI – UI Designer & Toolbox](https://marketplace.visualstudio.com/items?itemName=AI4YOU.api4ui) | Visual drag-and-drop UI designer for OpenEdge ABL. |
-| [OpenEdge ABL – OpenAPI](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-abl-openapi) | Generate and keep ABL clients aligned with OpenAPI specs. |
-| [OpenEdge ABL – PASOE](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-pasoe) | Configure and manage PASOE servers from a graphical interface. |
-| [OpenEdge DataDigger](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-datadigger) | Database browser and data editor. |
-| [OpenEdge Data Administration](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-data-administration) | Database administration tooling. |
-| [OpenEdge HCK – Health Check Kit](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-hck) | Database health-check monitoring and analysis dashboard. |
+| Extension | What it does | Documentation
+|---|---|---|
+| [OpenEdge Config Management](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-config-management) | Central owner of shared OpenEdge ABL configuration (database connections, runtime/DLC, project discovery) — plus ABL scaffolding, compile/run, and MCP server lifecycle. The other AI4YOU extensions depend on it. | Coming Soon
+| [API4UI – UI Designer & Toolbox](https://marketplace.visualstudio.com/items?itemName=AI4YOU.api4ui) | Visual drag-and-drop UI designer for OpenEdge ABL. | Coming Soon
+| [OpenEdge ABL – OpenAPI](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-abl-openapi) | Generate and keep ABL clients aligned with OpenAPI specs. | Coming Soon
+| [OpenEdge ABL – PASOE](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-pasoe) | Configure and manage PASOE servers from a graphical interface. | [PASOE Documentation](https://www.kh-it.be/api/manuals/browser-handoff?manualSlug=pasoe-documentation&lang=en&theme=dark)
+| [OpenEdge DataDigger](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-datadigger) | Database browser and data editor. | [DataDigger Documentation](https://www.kh-it.be/api/manuals/browser-handoff?manualSlug=datadigger-documentation&lang=en&theme=dark)
+| [OpenEdge Data Administration](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-data-administration) | Database administration tooling. | [Data Administration Documentation](https://www.kh-it.be/api/manuals/browser-handoff?manualSlug=administration-documentation&lang=en&theme=dark)
+| [OpenEdge HCK – Health Check Kit](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-hck) | Database health-check monitoring and analysis dashboard. | [HCK Documentation](https://www.kh-it.be/api/manuals/browser-handoff?manualSlug=hck-documentation&lang=en&theme=dark)
 
 ### Extra developer tools
 | Extension | What it does |
