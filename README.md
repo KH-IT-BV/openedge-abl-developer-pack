@@ -19,14 +19,17 @@ describing issues, and letting humans and agents drive them to done together.
 
 ![From manual coding to AI orchestration — four stages](https://raw.githubusercontent.com/KH-IT-BV/openedge-abl-developer-pack/main/images/stages.png)
 
-In the OpenEdge world, that next step is still hard. Not because the language
-can't keep up, but because **not all the tools are there yet** to fully automate
-the workflow. Too much of the day still depends on manual, screen-by-screen work.
+In the OpenEdge world, the foundation for that next step is already in place.
+**Progress has done the hard part**: the OpenEdge ABL language server and the
+official **OpenEdge MCP connector** make ABL a first-class citizen in VS Code and
+across AI agents.
 
-That's where we step in.
+What's missing is the **operational tooling** on top — database administration,
+PASOE management, health checks, UI design, and API generation.
 
-The tooling itself isn't missing — it just isn't available in VS Code and its
-forks yet. That's where **phase 1** starts: bringing it into this environment.
+> **That's AI4YOU: the operational tooling layer on top of the Progress foundation.**
+
+That's where **phase 1** starts: bringing that tooling into this environment.
 
 | Capability | Extension | Available on | Ongoing |
 |---|---|---|---|
@@ -50,9 +53,10 @@ and toward a **project-management foundation** — where humans and AI collabora
 on *described features*, not lines of code. To get there, the OpenEdge ecosystem
 still has gaps we need to close.
 
-By bringing these tools to VS Code and its forks now, we make their capabilities
-**available to agents** — and that unlocks **stable, predictable, fully automated
-feature delivery** for OpenEdge development.
+By bringing this operational tooling to VS Code and its forks now — alongside the
+Progress language and MCP foundation — we make these capabilities **available to
+agents**. Together, the Progress foundation and the OEDP layer unlock **stable,
+predictable, fully automated feature delivery** for OpenEdge development.
 
 > **Work in progress:** We are also building installable AI-agent skills for this pack using Microsoft APM. See [AI skills for agents (APM) — work in progress](AI-SKILLS-APM-WIP.md).
 
@@ -63,12 +67,13 @@ feature delivery** for OpenEdge development.
 ## What's inside
 
 
-### Foundation
+### Progress foundation
 | Extension | What it does |
 |---|---|
-| [OpenEdge ABL (LSP)](https://marketplace.visualstudio.com/items?itemName=riversidesoftware.openedge-abl-lsp) | The base language server: syntax, compile, navigation. Most of the pack builds on this. |
+| [OpenEdge ABL (LSP)](https://marketplace.visualstudio.com/items?itemName=riversidesoftware.openedge-abl-lsp) | The Progress-sponsored base language server: syntax, compile, navigation. The whole pack builds on this. |
+| [Progress OpenEdge MCP Connector](https://marketplace.visualstudio.com/items?itemName=progress-software.progress-openedge-mcp-connector-abl) | Official Progress MCP connector for ABL — exposes OpenEdge to AI agents. The foundation OEDP's operational tooling layers onto. |
 
-### OpenEdge tooling by AI4YOU
+### Operational tooling layer by AI4YOU
 | Extension | What it does |
 |---|---|
 | [OpenEdge Config Management](https://marketplace.visualstudio.com/items?itemName=AI4YOU.openedge-config-management) | Central owner of shared OpenEdge ABL configuration (database connections, runtime/DLC, project discovery) — plus ABL scaffolding, compile/run, and MCP server lifecycle. The other AI4YOU extensions depend on it. |
@@ -78,11 +83,6 @@ feature delivery** for OpenEdge development.
 | [OpenEdge DataDigger](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-datadigger) | Database browser and data editor. |
 | [OpenEdge Data Administration](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-data-administration) | Database administration tooling. |
 | [OpenEdge HCK – Health Check Kit](https://marketplace.visualstudio.com/items?itemName=AI4YOU.vscode-openedge-hck) | Database health-check monitoring and analysis dashboard. |
-
-### AI & automation
-| Extension | What it does |
-|---|---|
-| [Progress OpenEdge MCP Connector](https://marketplace.visualstudio.com/items?itemName=progress-software.progress-openedge-mcp-connector-abl) | Official Progress MCP connector for ABL — exposes OpenEdge to AI agents. |
 
 ### Extra developer tools
 | Extension | What it does |
