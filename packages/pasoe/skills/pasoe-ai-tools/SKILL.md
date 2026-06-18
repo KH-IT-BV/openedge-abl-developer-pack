@@ -21,10 +21,10 @@ socket** — management runs from the extension over HTTP(S) to the PASOE server
    (`serverName`, defaults to the first entry):
    - Read-only: `pasoe_status` (running/unreachable/unauthorized), `pasoe_list_instances`
      (optionally with live status; passwords never included).
-   - State-changing: `pasoe_create_instance` (settings + SecretStorage entry — config only, no
-     OS-level runtime), `pasoe_start_instance` / `pasoe_stop_instance` (OE Manager MS-Agent
-     lifecycle per `appName`/`agentId`), `pasoe_deploy_application` (deploy a `.paar` to a web
-     app via `rest` | `soap` | `web` transport).
+   - State-changing: `pasoe_create_instance` (provisions a local OS-level PASOE instance via
+     `pasman` and registers it in `openedge-pasoe.servers`), `pasoe_start_instance` /
+     `pasoe_stop_instance` (OE Manager MS-Agent lifecycle per `appName`/`agentId`),
+     `pasoe_deploy_application` (deploy a `.paar` to a web app via `rest` | `soap` | `web` transport).
 2. **VS Code commands** (require a running extension):
    - `vscode-openedge.paose.launchOpenEdgePasoe` — open the PASOE configuration UI.
    - `vscode-openedge-pasoe.handleAuth` — OAuth callback handler (`vscode://` URI scheme).
@@ -49,7 +49,10 @@ Each entry: `name`, `host`, `port`, `transport` (`http`|`https`), `authType` (`b
 
 ## Limitations / readiness
 
-- `pasoe_create_instance` writes configuration only — it does **not** create an OS-level PASOE
-  runtime or start a process.
+- `pasoe_create_instance` provisions a local OS-level PASOE instance via `pasman` and registers it
+  in `openedge-pasoe.servers`. The instance is created on disk but **not** started automatically.
+- Registered PASOE instances must **not** be deleted manually (do not delete the instance directory
+  or edit `openedge-pasoe.servers` by hand). Deletion must go through the PASOE MCP server / pasman
+  so configuration and the OS-level instance stay in sync.
 - Passwords live in VS Code SecretStorage (via `secretKey`); outside VS Code, credentials must be
   provided explicitly. Treat start/stop/deploy as state-changing — confirm the target.
