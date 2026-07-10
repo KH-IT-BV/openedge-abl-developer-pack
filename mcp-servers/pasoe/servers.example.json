@@ -1,0 +1,14 @@
+{
+  "openedge-pasoe.servers": [
+    {
+      "name": "oepas1",
+      "host": "localhost",
+      "port": 8810,
+      "transport": "http",
+      "authType": "basic",
+      "username": "tomcat",
+      "password": "tomcat",
+      "sharePlaintextCredentials": true
+    }
+  ]
+}

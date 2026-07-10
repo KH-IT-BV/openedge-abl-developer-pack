@@ -1,0 +1,8 @@
+{
+  "connections": [
+    {
+      "name": "sports2020",
+      "connect": "-db sports2020 -H localhost -S 6900"
+    }
+  ]
+}

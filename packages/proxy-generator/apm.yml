@@ -1,0 +1,19 @@
+name: openedge-proxy-generator-skills
+version: 0.1.0
+description: AI-tool skill for the OpenEdge Proxy Generator VS Code extension — edit ProxyGen (.pgp) projects and generate Open Client proxies (.NET, Java, Web Services, REST) via the `openedge-proxy-generator` MCP server, with a headless Node backend wrapping `proxygenbatch` and a launcher CLI as fallback.
+author:
+  name: KH-IT
+  url: https://github.com/KH-IT-BV
+license: UNLICENSED
+repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
+keywords: [openedge, abl, proxygen, open-client, proxy, rest, soap, mcp, ai-tools]
+type: skill
+targets:
+  - copilot
+  - claude
+  - cursor
+  - codex
+includes: auto
+dependencies:
+  apm: []
+  mcp: []

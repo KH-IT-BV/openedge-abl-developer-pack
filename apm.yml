@@ -1,0 +1,49 @@
+# APM (Agent Package Manager) — monorepo-hybrid marketplace
+# https://microsoft.github.io/apm/producer/repo-shapes/
+#
+# One repo, many per-plugin packages under packages/, one marketplace at the root.
+# Each plugin package has its own apm.yml so it can be compiled/tested in isolation.
+#
+# Consumers:
+#   apm marketplace add KH-IT-BV/openedge-abl-developer-pack
+#   apm install openedge-openapi-skills        # any single plugin
+# Or install one plugin package directly by subpath:
+#   apm install KH-IT-BV/openedge-abl-developer-pack/packages/openapi#v0.2.0
+name: openedge-abl-developer-pack-skills
+version: 0.2.0
+description: AI-tool skills for the OpenEdge ABL Developer Pack — one installable skill package per plugin (UI Designer, OpenAPI, PASOE, DataDigger, Dictionary, HCK, Database Selector, Config Management). Each teaches an agent how to drive that plugin via its MCP server, headless launcher CLI/HTTP backend, or commands.
+
+marketplace:
+  owner:
+    name: KH-IT-BV
+    url: https://github.com/KH-IT-BV
+  outputs:
+    claude: {}
+  # All packages share the repo tag (one version bumps everything).
+  versioning:
+    strategy: lockstep
+  packages:
+    - name: openedge-openapi-skills
+      source: ./packages/openapi
+      version: 0.2.0
+    - name: openedge-ui-editor-skills
+      source: ./packages/ui-editor
+      version: 0.2.0
+    - name: openedge-datadigger-skills
+      source: ./packages/datadigger
+      version: 0.2.0
+    - name: openedge-dictionary-skills
+      source: ./packages/dictionary
+      version: 0.2.0
+    - name: openedge-hck-skills
+      source: ./packages/hck
+      version: 0.2.0
+    - name: openedge-pasoe-skills
+      source: ./packages/pasoe
+      version: 0.2.0
+    - name: openedge-database-selector-skills
+      source: ./packages/database-selector
+      version: 0.2.0
+    - name: openedge-config-management-skills
+      source: ./packages/config-management
+      version: 0.2.0

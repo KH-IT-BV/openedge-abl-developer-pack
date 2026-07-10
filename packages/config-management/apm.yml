@@ -1,0 +1,19 @@
+name: openedge-config-management-skills
+version: 0.2.0
+description: AI-tool skill for the OpenEdge Config Management VS Code extension — the shared-config owner (db connections, runtime/DLC, project discovery) plus ABL scaffolding, compile/run, and the `openedge-tooling` MCP server.
+author:
+  name: KH-IT
+  url: https://github.com/KH-IT-BV
+license: UNLICENSED
+repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
+keywords: [openedge, abl, configuration, scaffolding, compile, mcp, ai-tools]
+type: skill
+targets:
+  - copilot
+  - claude
+  - cursor
+  - codex
+includes: auto
+dependencies:
+  apm: []
+  mcp: []

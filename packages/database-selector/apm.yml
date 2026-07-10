@@ -1,0 +1,19 @@
+name: openedge-database-selector-skills
+version: 0.2.0
+description: AI-tool skill for the Database Selector shared library — the OpenEdge DB connection contract (openedge.abl.dbConnections) supplied to the datadigger/dictionary/hck plugin tools.
+author:
+  name: KH-IT
+  url: https://github.com/KH-IT-BV
+license: UNLICENSED
+repository: https://github.com/KH-IT-BV/openedge-abl-developer-pack
+keywords: [openedge, abl, database, connections, ai-tools]
+type: skill
+targets:
+  - copilot
+  - claude
+  - cursor
+  - codex
+includes: auto
+dependencies:
+  apm: []
+  mcp: []
