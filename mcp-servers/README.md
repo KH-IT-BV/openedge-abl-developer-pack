@@ -8,7 +8,8 @@ no local source paths.
 > **Generated artifacts — do not edit by hand.** The canonical source for each server
 > lives in its extension repo (e.g. `vscode-openedge-datadigger/mcp-server`). Re-bundle
 > with `npm run build-mcp` (from the pack root). A release-time rebuild keeps these in
-> sync with source.
+> sync with source. Exception: `abl-assistant/` is **vendored** — Progress's own Python
+> scripts checked in verbatim (see its README for provenance/update instructions).
 
 ## Layout
 
@@ -42,6 +43,9 @@ mcp-servers/
       oe/src/hckSocket.r
   openapi/                                   # JS-only (remote ABL generator API)
     index.cjs
+  abl-assistant/                             # Progress OpenEdge AI Assistant (vendored)
+    mcp-proxy.py                              # stdio proxy -> cloud MCP service (PDC auth)
+    mcp-login.py                              # one-time PDC API-key login
 ```
 
 Servers that drive an OpenEdge backend ship the **full runtime** — the JS bundle, the
@@ -106,6 +110,7 @@ The bundle is just JavaScript — it still needs the OpenEdge runtime it wraps:
 | `pasoe` | A reachable PASOE server with OE Manager (`PASOE_SERVERS_CONFIG_PATH`). No `DLC` — except the local `pasman` tools (create / list local instances), which use `PASOE_DLC_PATH`. |
 | `hck` | `DLC` (OpenEdge 12.x) + the HCK OE backend (`HCK_MCP_BACKEND_PATH`) + a reachable database (VST diagnostics). Pass `db` + an inline `conn` per call. |
 | `openapi` | Network access to the ABL generator API (`OPENAPI_DEFAULT_ENVIRONMENT`). No `DLC`. Generation calls may need `OPENAPI_LICENSE_DOMAIN`; saved configs come from `OPENAPI_WORKSPACE_PATH`. |
+| `abl-assistant` | Python 3.9+ on `PATH` + a Progress Data Cloud API key (one-time `python abl-assistant/mcp-login.py`, or headless via the `OE_ABL_MCP_API_KEY` env var — see its README) + network access to `openedge.data.progress.cloud`. No `DLC`. |
 
 So these run on a host with OpenEdge installed (a `local` Multica runtime, or an
 OpenEdge-capable container/VM) — packaging distributes the **code**, not OpenEdge.

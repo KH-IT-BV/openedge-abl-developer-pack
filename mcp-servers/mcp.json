@@ -55,6 +55,12 @@
       "env": {
         "OPENAPI_DEFAULT_ENVIRONMENT": "2026q1"
       }
+    },
+    "openedge-abl": {
+      "command": "python",
+      "args": [
+        "${OEDP_MCP_HOME}/abl-assistant/mcp-proxy.py"
+      ]
     }
   }
 }
