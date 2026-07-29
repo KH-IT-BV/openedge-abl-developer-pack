@@ -130,6 +130,25 @@ const SERVERS = [
   },
 ];
 
+/**
+ * Vendored servers: third-party MCP servers checked into mcp-servers/<name>/ verbatim —
+ * nothing to build, but they must survive mcp.json regeneration. `key` is the server id
+ * in mcp.json (kept as the upstream docs name it, so users recognize the official setup).
+ */
+const VENDORED = [
+  {
+    name: "abl-assistant",
+    key: "openedge-abl",
+    // Progress "OpenEdge AI Coding Assistant" MCP connector for ABL: a Python (3.9+,
+    // stdlib-only) stdio proxy to the cloud MCP service on openedge.data.progress.cloud.
+    // Requires a one-time login with a Progress Data Cloud API key:
+    //   python mcp-servers/abl-assistant/mcp-login.py
+    // (credentials land in ~/.oemcp/config-pdc-cli.json; the proxy refreshes tokens itself).
+    command: "python",
+    entry: "mcp-proxy.py",
+  },
+];
+
 const wanted = process.argv.slice(2);
 const targets = wanted.length ? SERVERS.filter((s) => wanted.includes(s.name)) : SERVERS;
 if (!targets.length) {
@@ -204,6 +223,15 @@ for (const s of SERVERS) {
     command: "node",
     args: [`\${OEDP_MCP_HOME}/${s.name}/index.cjs`],
     env: s.env,
+  };
+}
+for (const v of VENDORED) {
+  if (!existsSync(join(outRoot, v.name, v.entry))) {
+    continue;
+  }
+  mcpServers[v.key] = {
+    command: v.command,
+    args: [`\${OEDP_MCP_HOME}/${v.name}/${v.entry}`],
   };
 }
 writeFileSync(
