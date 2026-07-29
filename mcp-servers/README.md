@@ -40,6 +40,8 @@ mcp-servers/
       index.js
       oe/src/hck.pl                           # ~44 MB
       oe/src/hckSocket.r
+  openapi/                                   # JS-only (remote ABL generator API)
+    index.cjs
 ```
 
 Servers that drive an OpenEdge backend ship the **full runtime** — the JS bundle, the
@@ -69,6 +71,7 @@ node scripts/smoke-datadigger.mjs "-db sports2020 -H localhost -S 6900"
 node scripts/smoke-dictionary.mjs "-db sports2020 -H localhost -S 6900"
 node scripts/smoke-pasoe.mjs        # JS-only, no OpenEdge / network needed
 node scripts/smoke-hck.mjs       "-db sports2020 -H localhost -S 6900"
+node scripts/smoke-openapi.mjs     # JS-only, no OpenEdge / network needed
 ```
 
 Expected: `initialize -> OK`, a `tools/list` count, a tool result, then `PASS`. The OE-backed
@@ -102,6 +105,7 @@ The bundle is just JavaScript — it still needs the OpenEdge runtime it wraps:
 | `dictionary` | `DLC` (OpenEdge 12.x) + the Dictionary OE backend (`DICTIONARY_MCP_BACKEND_PATH`) + a reachable database |
 | `pasoe` | A reachable PASOE server with OE Manager (`PASOE_SERVERS_CONFIG_PATH`). No `DLC` — except the local `pasman` tools (create / list local instances), which use `PASOE_DLC_PATH`. |
 | `hck` | `DLC` (OpenEdge 12.x) + the HCK OE backend (`HCK_MCP_BACKEND_PATH`) + a reachable database (VST diagnostics). Pass `db` + an inline `conn` per call. |
+| `openapi` | Network access to the ABL generator API (`OPENAPI_DEFAULT_ENVIRONMENT`). No `DLC`. Generation calls may need `OPENAPI_LICENSE_DOMAIN`; saved configs come from `OPENAPI_WORKSPACE_PATH`. |
 
 So these run on a host with OpenEdge installed (a `local` Multica runtime, or an
 OpenEdge-capable container/VM) — packaging distributes the **code**, not OpenEdge.

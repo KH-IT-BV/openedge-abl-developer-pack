@@ -1,4 +1,597 @@
-"use strict";var L=Object.create;var v=Object.defineProperty;var B=Object.getOwnPropertyDescriptor;var E=Object.getOwnPropertyNames;var b=Object.getPrototypeOf,k=Object.prototype.hasOwnProperty;var C=(s,t,e,r)=>{if(t&&typeof t=="object"||typeof t=="function")for(let i of E(t))!k.call(s,i)&&i!==e&&v(s,i,{get:()=>t[i],enumerable:!(r=B(t,i))||r.enumerable});return s};var A=(s,t,e)=>(e=s!=null?L(b(s)):{},C(t||!s||!s.__esModule?v(e,"default",{value:s,enumerable:!0}):e,s));var w=A(require("path"));var h=require("child_process"),P=require("util"),y=(0,P.promisify)(h.exec),p=class s{constructor(){this.listeners=new Set;this.runtimeState={status:"stopped",process:null,baseUrl:null,port:null};this.startPromise=null}static{this.STDOUT_ERROR_PATTERNS=[{pattern:/Startup failed:\s*(.+)/i,message:"Backend Startup Failed",severity:"critical"},{pattern:/\[ABL\] Reconnect failed:\s*(.+)/i,message:"ABL Reconnect Failed",severity:"error"},{pattern:/ABL process exited with code (\d+)/i,message:"ABL Process Exited",severity:"error"},{pattern:/ABL process error:\s*(.+)/i,message:"ABL Process Error",severity:"error"},{pattern:/ABL socket error:\s*(.+)/i,message:"ABL Socket Error",severity:"error"},{pattern:/ABL connection closed/i,message:"ABL Connection Lost",severity:"warning"},{pattern:/Uncaught exception:\s*(.+)/i,message:"Backend Uncaught Exception",severity:"critical"},{pattern:/\[Config\] Error loading.*:\s*(.+)/i,message:"Config Loading Error",severity:"warning"},{pattern:/Failed to initialize client:\s*(.+)/i,message:"ABL Client Init Failed",severity:"error"},{pattern:/ABL start timeout/i,message:"ABL Start Timeout",severity:"error"},{pattern:/ABL command timeout/i,message:"ABL Command Timeout",severity:"error"},{pattern:/Not connected to ABL/i,message:"ABL Not Connected",severity:"error"},{pattern:/\[ABL\] DB connection error detected/i,message:"Database Connection Failed",severity:"error"},{pattern:/ABL:.*\*\*\s*(.+)/i,message:"ABL Runtime Warning",severity:"warning"}]}onEvent(t){return this.listeners.add(t),()=>this.listeners.delete(t)}getStatus(){return this.runtimeState.status}isRunning(){return this.runtimeState.status==="running"}getBaseUrl(){return this.runtimeState.baseUrl}getPort(){return this.runtimeState.port}async start(t){if(this.startPromise)return this.startPromise;if(this.runtimeState.status==="running"&&this.runtimeState.process&&this.runtimeState.baseUrl&&this.runtimeState.port!==null)return{processId:this.runtimeState.process.pid??0,port:this.runtimeState.port,baseUrl:this.runtimeState.baseUrl};this.startPromise=this.startInternal(t);try{return await this.startPromise}finally{this.startPromise=null}}async stop(){if(!this.runtimeState.process){this.runtimeState.status="stopped",await this.killOrphanedProcesses(this.runtimeState.port??void 0,void 0);return}this.runtimeState.status="stopping";let t=this.runtimeState.process;await this.stopProcess(t),this.runtimeState.process=null,this.runtimeState.baseUrl=null,this.runtimeState.status="stopped",await this.killOrphanedProcesses(this.runtimeState.port??void 0,void 0),this.runtimeState.port=null}async startInternal(t){let e=Math.max(1,(t.retryCount??0)+1);await this.killOrphanedProcesses(t.httpPort,t.ablSocketPort);for(let r=1;r<=e;r++){this.runtimeState.status="starting",this.emit({type:"starting",attempt:r,maxAttempts:e,timestamp:Date.now()});try{let i=await this.startAttempt(t);return this.runtimeState.status="running",i}catch(i){let n=i instanceof Error?i.message:String(i);if(r>=e)throw this.runtimeState.status="stopped",this.emitError({message:"Backend Startup Failed",details:n,severity:"critical",errorCode:this.extractSystemCode(n)}),i;this.emit({type:"retrying",attempt:r,maxAttempts:e,reason:n,timestamp:Date.now()})}}throw new Error("Backend failed to start")}async startAttempt(t){return new Promise((e,r)=>{let i=this.buildEnvironment(t),n=(0,h.spawn)(t.command??"node",[t.indexPath],{cwd:t.workingDirectory??t.backendPath,shell:t.shell??!0,stdio:["pipe","pipe","pipe"],env:i});this.runtimeState.process=n,this.runtimeState.port=t.httpPort,this.runtimeState.baseUrl=null;let o=!1,a=!1,u=setTimeout(async()=>{o||a||(o=!0,this.emitError({message:"Backend Startup Timeout",details:`Server failed to start within ${t.startupTimeoutMs??1e4}ms`,severity:"error"}),await this.stopProcess(n),r(new Error("Server failed to start within the configured timeout")))},t.startupTimeoutMs??1e4),m=()=>{u&&(clearTimeout(u),u=null)};n.stdout?.on("data",c=>{let l=c.toString();if(this.emit({type:"stdout",output:l,timestamp:Date.now()}),this.forwardStdoutErrors(l),!a&&l.includes("HTTP API server running")){a=!0,o=!0,m();let S=this.createBaseUrl(t.httpPort);this.runtimeState.baseUrl=S,this.runtimeState.port=t.httpPort,this.emit({type:"ready",processId:n.pid??0,port:t.httpPort,baseUrl:S,timestamp:Date.now()}),e({processId:n.pid??0,port:t.httpPort,baseUrl:S})}}),n.stderr?.on("data",c=>{let l=c.toString();this.emit({type:"stderr",output:l,timestamp:Date.now()}),this.isStderrNoise(l)||this.emitError({message:"Backend Error",details:l.trim(),severity:"error",errorCode:this.extractSystemCode(l)})}),n.once("error",async c=>{m(),this.runtimeState.process=null,this.runtimeState.baseUrl=null,this.runtimeState.status="stopped",this.emitError({message:"Backend Process Error",details:c.message,severity:"critical",errorCode:this.extractSystemCode(c.message)}),o||(o=!0,r(c))}),n.once("exit",(c,l)=>{m(),this.runtimeState.process=null,this.runtimeState.baseUrl=null,this.runtimeState.status!=="stopping"&&(this.runtimeState.status="stopped"),this.emit({type:"stopped",code:c,signal:l,timestamp:Date.now()}),!a&&!o&&(o=!0,r(new Error(`Process exited with code ${c}${l?` and signal ${l}`:""}`)))})})}buildEnvironment(t){let e={...process.env,...t.env??{},HTTP_PORT:String(t.httpPort),ABL_SOCKET_PORT:String(t.ablSocketPort)};return t.workspaceConfigPath&&(e.HCK_OE_CONFIG=t.workspaceConfigPath),t.dlcPath&&(e.DLC=t.dlcPath),t.connectionsFilePath&&(e.HCK_CONNECTIONS_FILE=t.connectionsFilePath),e}createBaseUrl(t){return`http://127.0.0.1:${t}`}forwardStdoutErrors(t){let e=t.split(/\r?\n/).map(r=>r.trim()).filter(r=>r.length>0);for(let r of e)this.matchStdoutErrorLine(r)}matchStdoutErrorLine(t){for(let{pattern:e,message:r,severity:i}of s.STDOUT_ERROR_PATTERNS){let n=t.match(e);if(n){this.emitError({message:r,details:n[1]?.trim()||t,severity:i,errorCode:this.extractSystemCode(t)});return}}}isStderrNoise(t){return[/^\(node:\d+\) ExperimentalWarning/,/^\(node:\d+\) DeprecationWarning/,/^\(Use .* to show where the warning was created\)/].some(r=>r.test(t.trim()))}extractSystemCode(t){if(!t)return;let e=t.match(/\b(E[A-Z]{2,})\b/);if(e)return e[1];let r=t.match(/exited with code (\d+)/);if(r)return`EXIT_${r[1]}`;let i=t.match(/(?:error[:\s]*|[(\s])(\d{3,5})(?:\b|[)\s])/i);if(i)return i[1]}async stopProcess(t){if(t.exitCode===null){if(process.platform==="win32"&&t.pid){await this.killProcessById(t.pid,!0,!0);return}t.kill("SIGTERM"),await new Promise(e=>{let r=setTimeout(()=>{t.exitCode===null&&t.kill("SIGKILL"),e()},3e3);t.once("exit",()=>{clearTimeout(r),e()})})}}async killOrphanedProcesses(t,e){try{let r=process.platform==="win32",i=r?this.getWindowsFindCommands(t,e):this.getPosixFindCommands(t,e);if(i.length===0)return;let n=await Promise.allSettled(i.map(({command:a,source:u})=>y(a).then(({stdout:m})=>this.extractPids(m,u,r)))),o=new Set;for(let a of n)if(a.status==="fulfilled")for(let u of a.value)o.add(u);this.runtimeState.process?.pid&&o.delete(this.runtimeState.process.pid),await Promise.allSettled([...o].map(a=>this.killProcessById(a,r,r)))}catch{}}getWindowsFindCommands(t,e){let r=[];return e&&r.push({command:`netstat -ano | findstr :${e}`,source:"netstat"}),t&&r.push({command:`netstat -ano | findstr :${t}`,source:"netstat"}),r}getPosixFindCommands(t,e){let r=[];return e&&r.push({command:`lsof -ti:${e} || true`,source:"lsof"}),t&&r.push({command:`lsof -ti:${t} || true`,source:"lsof"}),r}extractPids(t,e,r){let i=[];if(r&&e==="wmic"){let o=t.split(`
-`).filter(a=>a.trim()&&!a.includes("ProcessId"));for(let a of o){let u=parseInt(a.trim(),10);!Number.isNaN(u)&&u>0&&i.push(u)}return i}let n=t.split(`
-`).filter(o=>o.trim());for(let o of n){let a=r?o.trim().split(/\s+/):[o.trim()],u=a[a.length-1],m=parseInt(u,10);!Number.isNaN(m)&&m>0&&i.push(m)}return i}async killProcessById(t,e,r=!1){if(e){await y(`taskkill /F${r?" /T":""} /PID ${t}`);return}process.kill(t,"SIGKILL")}emit(t){for(let e of this.listeners)e(t)}emitError(t){this.emit({type:"error",error:t,timestamp:Date.now()})}};var T=1e3;async function R(){let[s,...t]=process.argv.slice(2);s!=="start"&&(g({type:"error",timestamp:Date.now(),error:{message:"Unsupported command",details:`Received '${s??""}'. Supported commands: start`,severity:"critical"}}),process.exit(1));let e=x(t),r=N(e),i=new p,n=process.ppid,o=!1,a,u=i.onEvent(c=>g(c)),m=async c=>{if(!o){o=!0;try{a&&(clearInterval(a),a=void 0),await i.stop()}finally{u(),process.exit(0)}}};process.once("SIGINT",()=>{m("SIGINT")}),process.once("SIGTERM",()=>{m("SIGTERM")});try{await i.start(r)}catch(c){g({type:"error",timestamp:Date.now(),error:{message:"Launcher start failed",details:c instanceof Error?c.message:String(c),severity:"critical"}}),u(),process.exit(1)}a=setInterval(()=>{I(n)||m("SIGTERM")},T),await U()}function I(s){if(!Number.isInteger(s)||s<=0)return!1;try{return process.kill(s,0),!0}catch{return!1}}function x(s){let t={};for(let e=0;e<s.length;e++){let r=s[e];if(!r.startsWith("--"))continue;let i=r.slice(2),n=s[e+1];if(!n||n.startsWith("--")){t[i]=!0;continue}t[i]=n,e++}return t}function N(s){let t=D(s,"backendPath"),e=d(s,"indexPath")??w.join(t,"index.js");return{backendPath:t,indexPath:e,httpPort:f(s,"httpPort",23003),ablSocketPort:f(s,"ablSocketPort",23e3),dlcPath:d(s,"dlcPath"),workspaceConfigPath:d(s,"workspaceConfigPath"),connectionsFilePath:d(s,"connectionsFilePath"),startupTimeoutMs:f(s,"startupTimeoutMs",1e4),retryCount:f(s,"retryCount",3),workingDirectory:d(s,"workingDirectory")??t,command:d(s,"command")??"node",shell:F(s,"shell",!0)}}function D(s,t){let e=s[t];if(typeof e!="string"||e.trim().length===0)throw new Error(`Missing required argument --${t}`);return e}function d(s,t){let e=s[t];return typeof e=="string"&&e.trim().length>0?e:void 0}function f(s,t,e){let r=d(s,t);if(!r)return e;let i=Number(r);if(Number.isNaN(i))throw new Error(`Invalid numeric argument for --${t}: ${r}`);return i}function F(s,t,e){let r=s[t];if(typeof r=="boolean")return r;if(typeof r!="string")return e;if(r==="true")return!0;if(r==="false")return!1;throw new Error(`Invalid boolean argument for --${t}: ${r}`)}function g(s){process.stdout.write(`${JSON.stringify(s)}
-`)}async function U(){await new Promise(()=>{})}R().catch(s=>{g({type:"error",timestamp:Date.now(),error:{message:"Launcher CLI failure",details:s instanceof Error?s.message:String(s),severity:"critical"}}),process.exit(1)});
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+
+// native/launcher/hckLauncherCli.ts
+var path = __toESM(require("path"));
+
+// src/services/backendLauncherCore.ts
+var import_child_process = require("child_process");
+var import_util = require("util");
+var execAsync = (0, import_util.promisify)(import_child_process.exec);
+var BackendLauncherCore = class _BackendLauncherCore {
+  constructor() {
+    this.listeners = /* @__PURE__ */ new Set();
+    this.runtimeState = {
+      status: "stopped",
+      process: null,
+      baseUrl: null,
+      port: null
+    };
+    this.startPromise = null;
+  }
+  static {
+    this.STDOUT_ERROR_PATTERNS = [
+      { pattern: /Startup failed:\s*(.+)/i, message: "Backend Startup Failed", severity: "critical" },
+      { pattern: /\[ABL\] Reconnect failed:\s*(.+)/i, message: "ABL Reconnect Failed", severity: "error" },
+      { pattern: /ABL process exited with code (\d+)/i, message: "ABL Process Exited", severity: "error" },
+      { pattern: /ABL process error:\s*(.+)/i, message: "ABL Process Error", severity: "error" },
+      { pattern: /ABL socket error:\s*(.+)/i, message: "ABL Socket Error", severity: "error" },
+      { pattern: /ABL connection closed/i, message: "ABL Connection Lost", severity: "warning" },
+      { pattern: /Uncaught exception:\s*(.+)/i, message: "Backend Uncaught Exception", severity: "critical" },
+      { pattern: /\[Config\] Error loading.*:\s*(.+)/i, message: "Config Loading Error", severity: "warning" },
+      { pattern: /Failed to initialize client:\s*(.+)/i, message: "ABL Client Init Failed", severity: "error" },
+      { pattern: /ABL start timeout/i, message: "ABL Start Timeout", severity: "error" },
+      { pattern: /ABL command timeout/i, message: "ABL Command Timeout", severity: "error" },
+      { pattern: /Not connected to ABL/i, message: "ABL Not Connected", severity: "error" },
+      { pattern: /\[ABL\] DB connection error detected/i, message: "Database Connection Failed", severity: "error" },
+      { pattern: /ABL:.*\*\*\s*(.+)/i, message: "ABL Runtime Warning", severity: "warning" }
+    ];
+  }
+  onEvent(listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+  getStatus() {
+    return this.runtimeState.status;
+  }
+  isRunning() {
+    return this.runtimeState.status === "running";
+  }
+  getBaseUrl() {
+    return this.runtimeState.baseUrl;
+  }
+  getPort() {
+    return this.runtimeState.port;
+  }
+  async start(request) {
+    if (this.startPromise) {
+      return this.startPromise;
+    }
+    if (this.runtimeState.status === "running" && this.runtimeState.process && this.runtimeState.baseUrl && this.runtimeState.port !== null) {
+      return {
+        processId: this.runtimeState.process.pid ?? 0,
+        port: this.runtimeState.port,
+        baseUrl: this.runtimeState.baseUrl
+      };
+    }
+    this.startPromise = this.startInternal(request);
+    try {
+      return await this.startPromise;
+    } finally {
+      this.startPromise = null;
+    }
+  }
+  async stop() {
+    if (!this.runtimeState.process) {
+      this.runtimeState.status = "stopped";
+      await this.killOrphanedProcesses(this.runtimeState.port ?? void 0, void 0);
+      return;
+    }
+    this.runtimeState.status = "stopping";
+    const activeProcess = this.runtimeState.process;
+    await this.stopProcess(activeProcess);
+    this.runtimeState.process = null;
+    this.runtimeState.baseUrl = null;
+    this.runtimeState.status = "stopped";
+    await this.killOrphanedProcesses(this.runtimeState.port ?? void 0, void 0);
+    this.runtimeState.port = null;
+  }
+  async startInternal(request) {
+    const maxAttempts = Math.max(1, (request.retryCount ?? 0) + 1);
+    await this.killOrphanedProcesses(request.httpPort, request.ablSocketPort);
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      this.runtimeState.status = "starting";
+      this.emit({ type: "starting", attempt, maxAttempts, timestamp: Date.now() });
+      try {
+        const result = await this.startAttempt(request);
+        this.runtimeState.status = "running";
+        return result;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (attempt >= maxAttempts) {
+          this.runtimeState.status = "stopped";
+          this.emitError({
+            message: "Backend Startup Failed",
+            details: message,
+            severity: "critical",
+            errorCode: this.extractSystemCode(message)
+          });
+          throw error;
+        }
+        this.emit({
+          type: "retrying",
+          attempt,
+          maxAttempts,
+          reason: message,
+          timestamp: Date.now()
+        });
+      }
+    }
+    throw new Error("Backend failed to start");
+  }
+  async startAttempt(request) {
+    return new Promise((resolve, reject) => {
+      const env = this.buildEnvironment(request);
+      const backendProcess = (0, import_child_process.spawn)(request.command ?? "node", [request.indexPath], {
+        cwd: request.workingDirectory ?? request.backendPath,
+        shell: request.shell ?? true,
+        stdio: ["pipe", "pipe", "pipe"],
+        env
+      });
+      this.runtimeState.process = backendProcess;
+      this.runtimeState.port = request.httpPort;
+      this.runtimeState.baseUrl = null;
+      let settled = false;
+      let isReady = false;
+      let startupTimeout = setTimeout(async () => {
+        if (settled || isReady) {
+          return;
+        }
+        settled = true;
+        this.emitError({
+          message: "Backend Startup Timeout",
+          details: `Server failed to start within ${request.startupTimeoutMs ?? 1e4}ms`,
+          severity: "error"
+        });
+        await this.stopProcess(backendProcess);
+        reject(new Error("Server failed to start within the configured timeout"));
+      }, request.startupTimeoutMs ?? 1e4);
+      const clearStartupTimeout = () => {
+        if (startupTimeout) {
+          clearTimeout(startupTimeout);
+          startupTimeout = null;
+        }
+      };
+      backendProcess.stdout?.on("data", (data) => {
+        const output = data.toString();
+        this.emit({ type: "stdout", output, timestamp: Date.now() });
+        this.forwardStdoutErrors(output);
+        if (!isReady && output.includes("HTTP API server running")) {
+          isReady = true;
+          settled = true;
+          clearStartupTimeout();
+          const baseUrl = this.createBaseUrl(request.httpPort);
+          this.runtimeState.baseUrl = baseUrl;
+          this.runtimeState.port = request.httpPort;
+          this.emit({
+            type: "ready",
+            processId: backendProcess.pid ?? 0,
+            port: request.httpPort,
+            baseUrl,
+            timestamp: Date.now()
+          });
+          resolve({
+            processId: backendProcess.pid ?? 0,
+            port: request.httpPort,
+            baseUrl
+          });
+        }
+      });
+      backendProcess.stderr?.on("data", (data) => {
+        const output = data.toString();
+        this.emit({ type: "stderr", output, timestamp: Date.now() });
+        if (!this.isStderrNoise(output)) {
+          this.emitError({
+            message: "Backend Error",
+            details: output.trim(),
+            severity: "error",
+            errorCode: this.extractSystemCode(output)
+          });
+        }
+      });
+      backendProcess.once("error", async (error) => {
+        clearStartupTimeout();
+        this.runtimeState.process = null;
+        this.runtimeState.baseUrl = null;
+        this.runtimeState.status = "stopped";
+        this.emitError({
+          message: "Backend Process Error",
+          details: error.message,
+          severity: "critical",
+          errorCode: this.extractSystemCode(error.message)
+        });
+        if (!settled) {
+          settled = true;
+          reject(error);
+        }
+      });
+      backendProcess.once("exit", (code, signal) => {
+        clearStartupTimeout();
+        this.runtimeState.process = null;
+        this.runtimeState.baseUrl = null;
+        if (this.runtimeState.status !== "stopping") {
+          this.runtimeState.status = "stopped";
+        }
+        this.emit({ type: "stopped", code, signal, timestamp: Date.now() });
+        if (!isReady && !settled) {
+          settled = true;
+          reject(new Error(`Process exited with code ${code}${signal ? ` and signal ${signal}` : ""}`));
+        }
+      });
+    });
+  }
+  buildEnvironment(request) {
+    const env = {
+      ...process.env,
+      ...request.env ?? {},
+      HTTP_PORT: String(request.httpPort),
+      ABL_SOCKET_PORT: String(request.ablSocketPort)
+    };
+    if (request.workspaceConfigPath) {
+      env.HCK_OE_CONFIG = request.workspaceConfigPath;
+    }
+    if (request.dlcPath) {
+      env.DLC = request.dlcPath;
+    }
+    if (request.connectionsFilePath) {
+      env.HCK_CONNECTIONS_FILE = request.connectionsFilePath;
+    }
+    return env;
+  }
+  createBaseUrl(port) {
+    return `http://127.0.0.1:${port}`;
+  }
+  forwardStdoutErrors(output) {
+    const lines = output.split(/\r?\n/).map((line) => line.trim()).filter((line) => line.length > 0);
+    for (const line of lines) {
+      this.matchStdoutErrorLine(line);
+    }
+  }
+  matchStdoutErrorLine(line) {
+    for (const { pattern, message, severity } of _BackendLauncherCore.STDOUT_ERROR_PATTERNS) {
+      const match = line.match(pattern);
+      if (!match) {
+        continue;
+      }
+      this.emitError({
+        message,
+        details: match[1]?.trim() || line,
+        severity,
+        errorCode: this.extractSystemCode(line)
+      });
+      return;
+    }
+  }
+  isStderrNoise(text) {
+    const noisePatterns = [
+      /^\(node:\d+\) ExperimentalWarning/,
+      /^\(node:\d+\) DeprecationWarning/,
+      /^\(Use .* to show where the warning was created\)/
+    ];
+    return noisePatterns.some((pattern) => pattern.test(text.trim()));
+  }
+  extractSystemCode(text) {
+    if (!text) {
+      return void 0;
+    }
+    const systemMatch = text.match(/\b(E[A-Z]{2,})\b/);
+    if (systemMatch) {
+      return systemMatch[1];
+    }
+    const exitMatch = text.match(/exited with code (\d+)/);
+    if (exitMatch) {
+      return `EXIT_${exitMatch[1]}`;
+    }
+    const openEdgeMatch = text.match(/(?:error[:\s]*|[(\s])(\d{3,5})(?:\b|[)\s])/i);
+    if (openEdgeMatch) {
+      return openEdgeMatch[1];
+    }
+    return void 0;
+  }
+  async stopProcess(backendProcess) {
+    if (backendProcess.exitCode !== null) {
+      return;
+    }
+    if (process.platform === "win32" && backendProcess.pid) {
+      await this.killProcessById(backendProcess.pid, true, true);
+      return;
+    }
+    backendProcess.kill("SIGTERM");
+    await new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        if (backendProcess.exitCode === null) {
+          backendProcess.kill("SIGKILL");
+        }
+        resolve();
+      }, 3e3);
+      backendProcess.once("exit", () => {
+        clearTimeout(timeout);
+        resolve();
+      });
+    });
+  }
+  async killOrphanedProcesses(httpPort, ablSocketPort) {
+    try {
+      const isWindows = process.platform === "win32";
+      const findCommands = isWindows ? this.getWindowsFindCommands(httpPort, ablSocketPort) : this.getPosixFindCommands(httpPort, ablSocketPort);
+      if (findCommands.length === 0) {
+        return;
+      }
+      const results = await Promise.allSettled(
+        findCommands.map(({ command, source }) => execAsync(command).then(({ stdout }) => this.extractPids(stdout, source, isWindows)))
+      );
+      const processIds = /* @__PURE__ */ new Set();
+      for (const result of results) {
+        if (result.status !== "fulfilled") {
+          continue;
+        }
+        for (const processId of result.value) {
+          processIds.add(processId);
+        }
+      }
+      if (this.runtimeState.process?.pid) {
+        processIds.delete(this.runtimeState.process.pid);
+      }
+      await Promise.allSettled([...processIds].map((processId) => this.killProcessById(processId, isWindows, isWindows)));
+    } catch (_) {
+    }
+  }
+  getWindowsFindCommands(httpPort, ablSocketPort) {
+    const commands = [];
+    if (ablSocketPort) {
+      commands.push({ command: `netstat -ano | findstr :${ablSocketPort}`, source: "netstat" });
+    }
+    if (httpPort) {
+      commands.push({ command: `netstat -ano | findstr :${httpPort}`, source: "netstat" });
+    }
+    return commands;
+  }
+  getPosixFindCommands(httpPort, ablSocketPort) {
+    const commands = [];
+    if (ablSocketPort) {
+      commands.push({ command: `lsof -ti:${ablSocketPort} || true`, source: "lsof" });
+    }
+    if (httpPort) {
+      commands.push({ command: `lsof -ti:${httpPort} || true`, source: "lsof" });
+    }
+    return commands;
+  }
+  extractPids(stdout, source, isWindows) {
+    const processIds = [];
+    if (isWindows && source === "wmic") {
+      const lines2 = stdout.split("\n").filter((line) => line.trim() && !line.includes("ProcessId"));
+      for (const line of lines2) {
+        const processId = parseInt(line.trim(), 10);
+        if (!Number.isNaN(processId) && processId > 0) {
+          processIds.push(processId);
+        }
+      }
+      return processIds;
+    }
+    const lines = stdout.split("\n").filter((line) => line.trim());
+    for (const line of lines) {
+      const parts = isWindows ? line.trim().split(/\s+/) : [line.trim()];
+      const lastPart = parts[parts.length - 1];
+      const processId = parseInt(lastPart, 10);
+      if (!Number.isNaN(processId) && processId > 0) {
+        processIds.push(processId);
+      }
+    }
+    return processIds;
+  }
+  async killProcessById(processId, isWindows, includeChildren = false) {
+    if (isWindows) {
+      const childTreeFlag = includeChildren ? " /T" : "";
+      await execAsync(`taskkill /F${childTreeFlag} /PID ${processId}`);
+      return;
+    }
+    process.kill(processId, "SIGKILL");
+  }
+  emit(event) {
+    for (const listener of this.listeners) {
+      listener(event);
+    }
+  }
+  emitError(error) {
+    this.emit({
+      type: "error",
+      error,
+      timestamp: Date.now()
+    });
+  }
+};
+
+// native/launcher/hckLauncherCli.ts
+var PARENT_CHECK_INTERVAL_MS = 1e3;
+async function main() {
+  const [command, ...rawArgs] = process.argv.slice(2);
+  if (command !== "start") {
+    writeEvent({
+      type: "error",
+      timestamp: Date.now(),
+      error: {
+        message: "Unsupported command",
+        details: `Received '${command ?? ""}'. Supported commands: start`,
+        severity: "critical"
+      }
+    });
+    process.exit(1);
+  }
+  const args = parseArgs(rawArgs);
+  const request = createLaunchRequest(args);
+  const launcher = new BackendLauncherCore();
+  const parentPid = process.ppid;
+  let stopping = false;
+  let parentMonitor;
+  const unsubscribe = launcher.onEvent((event) => writeEvent(event));
+  const shutdown = async (signal) => {
+    if (stopping) {
+      return;
+    }
+    stopping = true;
+    try {
+      if (parentMonitor) {
+        clearInterval(parentMonitor);
+        parentMonitor = void 0;
+      }
+      await launcher.stop();
+    } finally {
+      unsubscribe();
+      process.exit(0);
+    }
+  };
+  process.once("SIGINT", () => {
+    void shutdown("SIGINT");
+  });
+  process.once("SIGTERM", () => {
+    void shutdown("SIGTERM");
+  });
+  try {
+    await launcher.start(request);
+  } catch (error) {
+    writeEvent({
+      type: "error",
+      timestamp: Date.now(),
+      error: {
+        message: "Launcher start failed",
+        details: error instanceof Error ? error.message : String(error),
+        severity: "critical"
+      }
+    });
+    unsubscribe();
+    process.exit(1);
+  }
+  parentMonitor = setInterval(() => {
+    if (!isProcessRunning(parentPid)) {
+      void shutdown("SIGTERM");
+    }
+  }, PARENT_CHECK_INTERVAL_MS);
+  await waitForExitSignal();
+}
+function isProcessRunning(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) {
+    return false;
+  }
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function parseArgs(rawArgs) {
+  const args = {};
+  for (let index = 0; index < rawArgs.length; index++) {
+    const current = rawArgs[index];
+    if (!current.startsWith("--")) {
+      continue;
+    }
+    const key = current.slice(2);
+    const next = rawArgs[index + 1];
+    if (!next || next.startsWith("--")) {
+      args[key] = true;
+      continue;
+    }
+    args[key] = next;
+    index++;
+  }
+  return args;
+}
+function createLaunchRequest(args) {
+  const backendPath = getRequiredArg(args, "backendPath");
+  const indexPath = getOptionalStringArg(args, "indexPath") ?? path.join(backendPath, "index.js");
+  return {
+    backendPath,
+    indexPath,
+    httpPort: getNumberArg(args, "httpPort", 23003),
+    ablSocketPort: getNumberArg(args, "ablSocketPort", 23e3),
+    dlcPath: getOptionalStringArg(args, "dlcPath"),
+    workspaceConfigPath: getOptionalStringArg(args, "workspaceConfigPath"),
+    connectionsFilePath: getOptionalStringArg(args, "connectionsFilePath"),
+    startupTimeoutMs: getNumberArg(args, "startupTimeoutMs", 1e4),
+    retryCount: getNumberArg(args, "retryCount", 3),
+    workingDirectory: getOptionalStringArg(args, "workingDirectory") ?? backendPath,
+    command: getOptionalStringArg(args, "command") ?? "node",
+    shell: getBooleanArg(args, "shell", true)
+  };
+}
+function getRequiredArg(args, key) {
+  const value = args[key];
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`Missing required argument --${key}`);
+  }
+  return value;
+}
+function getOptionalStringArg(args, key) {
+  const value = args[key];
+  return typeof value === "string" && value.trim().length > 0 ? value : void 0;
+}
+function getNumberArg(args, key, defaultValue) {
+  const value = getOptionalStringArg(args, key);
+  if (!value) {
+    return defaultValue;
+  }
+  const parsed = Number(value);
+  if (Number.isNaN(parsed)) {
+    throw new Error(`Invalid numeric argument for --${key}: ${value}`);
+  }
+  return parsed;
+}
+function getBooleanArg(args, key, defaultValue) {
+  const value = args[key];
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value !== "string") {
+    return defaultValue;
+  }
+  if (value === "true") {
+    return true;
+  }
+  if (value === "false") {
+    return false;
+  }
+  throw new Error(`Invalid boolean argument for --${key}: ${value}`);
+}
+function writeEvent(event) {
+  process.stdout.write(`${JSON.stringify(event)}
+`);
+}
+async function waitForExitSignal() {
+  await new Promise(() => {
+    return;
+  });
+}
+void main().catch((error) => {
+  writeEvent({
+    type: "error",
+    timestamp: Date.now(),
+    error: {
+      message: "Launcher CLI failure",
+      details: error instanceof Error ? error.message : String(error),
+      severity: "critical"
+    }
+  });
+  process.exit(1);
+});
