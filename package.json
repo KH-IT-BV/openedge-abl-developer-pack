@@ -2,7 +2,7 @@
   "name": "openedge-abl-developer-pack",
   "displayName": "OpenEdge ABL Developer Pack",
   "description": "A curated VS Code extension pack for Progress OpenEdge ABL / 4GL developers, with language support, snippets, tooling, and productivity extensions.",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "publisher": "AI4YOU",
   "license": "UNLICENSED",
   "icon": "images/icon.png",
